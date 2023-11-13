@@ -1,0 +1,7 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/pharma_sales_and_management_system/.vs/pharma_sales_and_management_system
+/pharma_sales_and_management_system/pharma_sales_and_management_system/obj
