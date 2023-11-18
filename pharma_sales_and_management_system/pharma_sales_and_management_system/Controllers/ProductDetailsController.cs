@@ -48,8 +48,8 @@ namespace pharma_sales_and_management_system.Controllers
         // GET: ProductDetails/Create
         public IActionResult Create()
         {
-            ViewData["CategoryId"] = new SelectList(_context.ProductCategories, "Id", "Id");
-            ViewData["CompanyId"] = new SelectList(_context.Manufacturers, "Id", "Id");
+            ViewBag.CategoryId = new SelectList(_context.ProductCategories, "Id", "CategoryName");
+            ViewBag.CompanyId = new SelectList(_context.Manufacturers, "Id", "ComponyName");
             return View();
         }
 
@@ -60,15 +60,12 @@ namespace pharma_sales_and_management_system.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,ProductName,RetailPrice,ProductImage,Description,Disease,CategoryId,MfgDate,CompanyId,ExpDate")] ProductDetail productDetail)
         {
-            if (ModelState.IsValid)
-            {
+            
                 _context.Add(productDetail);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
-            }
-            ViewData["CategoryId"] = new SelectList(_context.ProductCategories, "Id", "Id", productDetail.CategoryId);
-            ViewData["CompanyId"] = new SelectList(_context.Manufacturers, "Id", "Id", productDetail.CompanyId);
-            return View(productDetail);
+            
+            //return View(productDetail);
         }
 
         // GET: ProductDetails/Edit/5
@@ -84,8 +81,8 @@ namespace pharma_sales_and_management_system.Controllers
             {
                 return NotFound();
             }
-            ViewData["CategoryId"] = new SelectList(_context.ProductCategories, "Id", "Id", productDetail.CategoryId);
-            ViewData["CompanyId"] = new SelectList(_context.Manufacturers, "Id", "Id", productDetail.CompanyId);
+            ViewBag.CategoryId = new SelectList(_context.ProductCategories, "Id", "CategoryName");
+            ViewBag.CompanyId = new SelectList(_context.Manufacturers, "Id", "ComponyName");
             return View(productDetail);
         }
 
@@ -101,8 +98,6 @@ namespace pharma_sales_and_management_system.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
-            {
                 try
                 {
                     _context.Update(productDetail);
@@ -120,11 +115,8 @@ namespace pharma_sales_and_management_system.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
-            }
-            ViewData["CategoryId"] = new SelectList(_context.ProductCategories, "Id", "Id", productDetail.CategoryId);
-            ViewData["CompanyId"] = new SelectList(_context.Manufacturers, "Id", "Id", productDetail.CompanyId);
-            return View(productDetail);
         }
+
 
         // GET: ProductDetails/Delete/5
         public async Task<IActionResult> Delete(int? id)

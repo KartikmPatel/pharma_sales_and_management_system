@@ -34,10 +34,10 @@
                 @Html.DisplayNameFor(model => model.ExpDate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Category)
+                @Html.DisplayNameFor(model => model.Category.CategoryName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Company)
+                @Html.DisplayNameFor(model => model.Company.ComponyName)
             </th>
             <th></th>
         </tr>
@@ -67,10 +67,10 @@
                 @Html.DisplayFor(modelItem => item.ExpDate)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Category.Id)
+                @Html.DisplayFor(modelItem => item.Category.CategoryName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Company.Id)
+                @Html.DisplayFor(modelItem => item.Company.ComponyName)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
