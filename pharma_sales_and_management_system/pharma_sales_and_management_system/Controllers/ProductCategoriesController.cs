@@ -19,9 +19,16 @@ namespace pharma_sales_and_management_system.Controllers
         }
 
         // GET: ProductCategories
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string search)
         {
-              return _context.ProductCategories != null ? 
+            if (search != null)
+            {
+                var searchCategory = from c in _context.ProductCategories
+                                    where c.CategoryName.Contains(search)
+                                    select c;
+                return View(await searchCategory.ToListAsync());
+            }
+            return _context.ProductCategories != null ? 
                           View(await _context.ProductCategories.ToListAsync()) :
                           Problem("Entity set 'pharma_managementContext.ProductCategories'  is null.");
         }

@@ -19,9 +19,16 @@ namespace pharma_sales_and_management_system.Controllers
         }
 
         // GET: Manufacturers
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string search)
         {
-              return _context.Manufacturers != null ? 
+            if (search != null)
+            {
+                var searchData = from m in _context.Manufacturers
+                                   where m.ComponyName.Contains(search) || m.Email.Contains(search) || m.ContactNo.ToString().Contains(search) || m.City.Contains(search)
+                                   select m;
+                return View(await searchData.ToListAsync());
+            }
+            return _context.Manufacturers != null ? 
                           View(await _context.Manufacturers.ToListAsync()) :
                           Problem("Entity set 'pharma_managementContext.Manufacturers'  is null.");
         }

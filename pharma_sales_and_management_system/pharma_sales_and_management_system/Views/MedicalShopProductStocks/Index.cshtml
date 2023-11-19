@@ -1,15 +1,10 @@
-﻿@model IEnumerable<pharma_sales_and_management_system.Models.AgencyProductStock>
+﻿@model IEnumerable<pharma_sales_and_management_system.Models.MedicalShopProductStock>
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Agency product stock detail</h1>
-
-<form asp-action="Index" method="get">
-    <input type="text" name="search" />
-    <input type="submit" value="Search" />
-</form>
+<h1>Medicalshop product stocks details</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -20,6 +15,12 @@
             <th>
                 @Html.DisplayNameFor(model => model.TotalQuantity)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MedicalShop.OwnerName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Product.ProductName)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -28,6 +29,12 @@
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.TotalQuantity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MedicalShop.OwnerName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Product.ProductName)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

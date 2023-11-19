@@ -19,9 +19,16 @@ namespace pharma_sales_and_management_system.Controllers
         }
 
         // GET: Medical
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string search)
         {
-              return _context.MedicalShopDetails != null ? 
+            if (search != null)
+            {
+                var searchMedical = from m in _context.MedicalShopDetails
+                                 where m.OwnerName.Contains(search) || m.Email.Contains(search) || m.ContactNo.ToString().Contains(search) || m.City.Contains(search)
+                                 select m;
+                return View(await searchMedical.ToListAsync());
+            }
+            return _context.MedicalShopDetails != null ? 
                           View(await _context.MedicalShopDetails.ToListAsync()) :
                           Problem("Entity set 'pharma_managementContext.MedicalShopDetails'  is null.");
         }

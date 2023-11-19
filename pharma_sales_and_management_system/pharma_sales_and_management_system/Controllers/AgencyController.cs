@@ -19,8 +19,15 @@ namespace pharma_sales_and_management_system.Controllers
         }
 
         // GET: Agency
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string search)
         {
+            if(search != null)
+            {
+                var searchAgency = from a in _context.AgencyDetails
+                           where a.AgencyName.Contains(search) || a.Email.Contains(search) || a.ContactNo.ToString().Contains(search)
+                           select a;
+                return View(await searchAgency.ToListAsync());
+            }
               return _context.AgencyDetails != null ? 
                           View(await _context.AgencyDetails.ToListAsync()) :
                           Problem("Entity set 'pharma_managementContext.AgencyDetails'  is null.");
