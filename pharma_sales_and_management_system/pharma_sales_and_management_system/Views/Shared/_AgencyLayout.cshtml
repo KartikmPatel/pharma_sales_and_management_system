@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <style>
+        #n1 {
+            color: black;
+            margin-left: 30px;
+            cursor: pointer;
+        }
+      </style>
+</head>
+<body>
+    <aside style="float:left;width:10%;height:600px;background-color:silver;" class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+        <ul class="navbar-nav flex-grow-1">
+            <li id="n1" class="nav-item">
+                <a class="nav-link text-dark" asp-area="">Dashboard</a>
+            </li>
+            <li id="n1" class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="ProductCategories" asp-action="Index">Categories</a>
+            </li>
+            <li id="n1" class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="ProductDetails" asp-action="Index">Products</a>
+            </li>
+            <li id="n1" class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="AgencyOrders" asp-action="Index">Order</a>
+            </li>
+            <li id="n1" class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Medical" asp-action="Index">Stores</a>
+            </li>
+            <li id="n1" class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="ProductDetails" asp-action="Index">Users</a>
+            </li>
+            <li id="n1" class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="AgencyProductStocks" asp-action="Index">Stocks</a>
+            </li>
+            <li id="n1" class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="ProductDetails" asp-action="Index">Report</a>
+            </li>
+        </ul>
+    </aside>
+    <div>
+        @RenderBody()
+    </div>
+</body>
+</html>

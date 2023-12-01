@@ -19,18 +19,10 @@ namespace pharma_sales_and_management_system.Controllers
         }
 
         // GET: AgencyProductStocks
-        public async Task<IActionResult> Index(string search)
+        public async Task<IActionResult> Index()
         {
-            if (search != null)
-            {
-                var searchData = from c in _context.AgencyProductStocks
-                                     where c.TotalQuantity.ToString().Contains(search)
-                                     select c;
-                return View(await searchData.ToListAsync());
-            }
-            return _context.AgencyProductStocks != null ? 
-                          View(await _context.AgencyProductStocks.ToListAsync()) :
-                          Problem("Entity set 'pharma_managementContext.AgencyProductStocks'  is null.");
+            var pharma_managementContext = _context.AgencyProductStocks.Include(p => p.Product);
+            return View(await pharma_managementContext.ToListAsync());                
         }
 
         // GET: AgencyProductStocks/Details/5
@@ -41,7 +33,7 @@ namespace pharma_sales_and_management_system.Controllers
                 return NotFound();
             }
 
-            var agencyProductStock = await _context.AgencyProductStocks
+            var agencyProductStock = await _context.AgencyProductStocks.Include(p => p.Product)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (agencyProductStock == null)
             {
@@ -54,6 +46,7 @@ namespace pharma_sales_and_management_system.Controllers
         // GET: AgencyProductStocks/Create
         public IActionResult Create()
         {
+            ViewBag.ProductId = new SelectList(_context.ProductDetails, "Id", "ProductName");
             return View();
         }
 
@@ -62,15 +55,11 @@ namespace pharma_sales_and_management_system.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,TotalQuantity")] AgencyProductStock agencyProductStock)
+        public async Task<IActionResult> Create([Bind("Id,TotalQuantity,ProductId")] AgencyProductStock agencyProductStock)
         {
-            if (ModelState.IsValid)
-            {
                 _context.Add(agencyProductStock);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
-            }
-            return View(agencyProductStock);
         }
 
         // GET: AgencyProductStocks/Edit/5
@@ -86,6 +75,8 @@ namespace pharma_sales_and_management_system.Controllers
             {
                 return NotFound();
             }
+
+            ViewBag.ProductId = new SelectList(_context.ProductDetails, "Id", "ProductName");
             return View(agencyProductStock);
         }
 
@@ -94,15 +85,14 @@ namespace pharma_sales_and_management_system.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,TotalQuantity")] AgencyProductStock agencyProductStock)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,TotalQuantity,ProductId")] AgencyProductStock agencyProductStock)
         {
             if (id != agencyProductStock.Id)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
-            {
+            
                 try
                 {
                     _context.Update(agencyProductStock);
@@ -120,8 +110,7 @@ namespace pharma_sales_and_management_system.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
-            }
-            return View(agencyProductStock);
+            
         }
 
         // GET: AgencyProductStocks/Delete/5
@@ -132,7 +121,7 @@ namespace pharma_sales_and_management_system.Controllers
                 return NotFound();
             }
 
-            var agencyProductStock = await _context.AgencyProductStocks
+            var agencyProductStock = await _context.AgencyProductStocks.Include(p => p.Product)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (agencyProductStock == null)
             {

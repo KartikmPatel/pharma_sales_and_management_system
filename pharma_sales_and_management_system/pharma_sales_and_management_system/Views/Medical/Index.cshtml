@@ -4,6 +4,10 @@
     ViewData["Title"] = "Index";
 }
 
+@{
+    Layout = "_AgencyLayout";
+}
+
 <h1>Medical shop Details</h1>
 
 <form asp-action="Index" method="get">
@@ -35,6 +39,11 @@
             <th>
                 @Html.DisplayNameFor(model => model.ProfilePic)
             </th>
+            <th>
+                <center>
+                    Action
+                </center>
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -58,6 +67,25 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.ProfilePic)
+            </td>
+            @* <td>
+                @Html.DisplayFor(modelItem => item.IsConfirmed)
+            </td> *@
+            <td>
+                <center>
+
+                    @if (item.IsConfirmed == 1)
+                    {
+                        <button class="btn btn-secondary" disabled>Verified</button>
+                    }
+                    else
+                    {
+                    <form asp-action="Verify" method="post">
+                      <input type="hidden" name="verify" class="form-control" value="0" />
+                      <button type="submit" class="btn btn-primary" asp-route-id="@item.Id">Verify</button>
+                    </form>
+                    }
+                    </center>
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

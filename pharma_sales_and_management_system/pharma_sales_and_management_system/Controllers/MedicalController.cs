@@ -33,6 +33,43 @@ namespace pharma_sales_and_management_system.Controllers
                           Problem("Entity set 'pharma_managementContext.MedicalShopDetails'  is null.");
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Index(string verify, int id,MedicalShopDetail medicalShopDetail)
+        {
+            if (id != medicalShopDetail.Id)
+            {
+                return NotFound();
+            }
+
+            //if (ModelState.IsValid)
+            //{
+            try
+            {
+                //var verify1 = Convert.ToInt32(verify);
+                if (verify == "0")
+                {
+                    medicalShopDetail.IsConfirmed = 1; // Assuming IsConfirmed is an integer property
+                    _context.Entry(medicalShopDetail).Property(x => x.IsConfirmed).IsModified = true;
+                    await _context.SaveChangesAsync();
+                }
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!MedicalShopDetailExists(medicalShopDetail.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return RedirectToAction(nameof(Index));
+            //}
+            //return View(medicalShopDetail);
+        }
+
         // GET: Medical/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -51,6 +88,42 @@ namespace pharma_sales_and_management_system.Controllers
             return View(medicalShopDetail);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Verify(string verify, int id,MedicalShopDetail medicalShopDetail)
+        {
+            if (id != medicalShopDetail.Id)
+            {
+                return NotFound();
+            }
+
+            //if (ModelState.IsValid)
+            //{
+                try
+                {
+                var verify1 = Convert.ToInt32(verify);
+                if (verify1 == 0)
+                {
+                    _context.Update(medicalShopDetail.IsConfirmed = 1);
+                    await _context.SaveChangesAsync();
+                }
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!MedicalShopDetailExists(medicalShopDetail.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                //return RedirectToAction(nameof(Index));
+            //}
+            return View(medicalShopDetail);
+        }
+
         // GET: Medical/Create
         public IActionResult Create()
         {
@@ -62,7 +135,7 @@ namespace pharma_sales_and_management_system.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,OwnerName,Email,ContactNo,City,Password,ProfilePic")] MedicalShopDetail medicalShopDetail)
+        public async Task<IActionResult> Create([Bind("Id,OwnerName,Email,ContactNo,City,Password,ProfilePic,IsConfirmed")] MedicalShopDetail medicalShopDetail)
         {
             if (ModelState.IsValid)
             {
@@ -94,7 +167,7 @@ namespace pharma_sales_and_management_system.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,OwnerName,Email,ContactNo,City,Password,ProfilePic")] MedicalShopDetail medicalShopDetail)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,OwnerName,Email,ContactNo,City,Password,ProfilePic,IsConfirmed")] MedicalShopDetail medicalShopDetail)
         {
             if (id != medicalShopDetail.Id)
             {

@@ -1,0 +1,88 @@
+﻿@model IEnumerable<pharma_sales_and_management_system.Models.AgencyOrder>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+@* <p>
+    <a asp-action="Create">Create New</a>
+</p> *@
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Quantity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Date)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsDelivered)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Agency.AgencyName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Company.ComponyName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Product.ProductName)
+            </th>
+            <th>
+                <center>
+                    Action
+                </center>
+            </th>
+            @* <th></th> *@
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Quantity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsDelivered)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Agency.AgencyName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Company.ComponyName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Product.ProductName)
+            </td>
+            <td>
+                    <center>
+
+                        @if (item.IsDelivered == 1)
+                        {
+                            <button class="btn btn-secondary" disabled>Delivered</button>
+                        }
+                        else
+                        {
+                            <form asp-action="Index" method="post">
+                                <input type="hidden" name="verify" class="form-control" value="0" />
+                                <input type="hidden" name="qty" class="form-control" value="@item.Quantity" />
+                                <input type="hidden" name="pid" class="form-control" value="@item.ProductId" />
+                                <button type="submit" class="btn btn-danger" asp-route-id="@item.Id">Pending</button>
+                            </form>
+                        }
+                    </center>
+            </td>
+            @* <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td> *@
+        </tr>
+}
+    </tbody>
+</table>

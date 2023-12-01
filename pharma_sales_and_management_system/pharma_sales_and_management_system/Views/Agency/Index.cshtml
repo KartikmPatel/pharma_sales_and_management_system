@@ -4,18 +4,52 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Agency Details</h1>
+@{
+    Layout = "_AgencyLayout";
+}
 
-<form asp-action="Index" method="get">
+
+@* <aside style="float:left;width:10%;height:600px;background-color:silver;">
+    <ul class="navbar-nav flex-grow-1">
+        <li id="n1" class="nav-item">
+            <a class="nav-link text-dark" asp-area="">Dashboard</a>
+        </li>
+        <li id="n1" class="nav-item">
+            <a class="nav-link text-dark" asp-area="" asp-controller="ProductCategories" asp-action="Index">Categories</a>
+        </li>
+        <li id="n1" class="nav-item">
+            <a class="nav-link text-dark" asp-area="" asp-controller="ProductDetails" asp-action="Index">Products</a>
+        </li>
+        <li id="n1" class="nav-item">
+            <a class="nav-link text-dark" asp-area="" asp-controller="AgencyOrders" asp-action="Index">Order</a>
+        </li>
+        <li id="n1" class="nav-item">
+            <a class="nav-link text-dark" asp-area="" asp-controller="Medical" asp-action="Index">Stores</a>
+        </li>
+        <li id="n1" class="nav-item">
+            <a class="nav-link text-dark" asp-area="" asp-controller="ProductDetails" asp-action="Index">Users</a>
+        </li>
+        <li id="n1" class="nav-item">
+            <a class="nav-link text-dark" asp-area="" asp-controller="AgencyProductStocks" asp-action="Index">Stocks</a>
+        </li>
+        <li id="n1" class="nav-item">
+            <a class="nav-link text-dark" asp-area="" asp-controller="ProductDetails" asp-action="Index">Report</a>
+        </li>
+    </ul>
+</aside> *@
+
+<h1 style="margin-left:10%;">Agency Details</h1>
+
+<form asp-action="Index" method="get" style="margin-left:10%;">
     <input type="text" name="search" />
     <input type="submit" value="Search" />
 </form>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" style="padding-left:2%;">Create New</a>
 </p>
 
-<table class="table">
+<table class="table" style="position:absolute;width:1000px;margin-left:150px;">
     <thead>
         <tr>
             <th>

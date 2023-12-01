@@ -118,6 +118,7 @@ namespace pharma_sales_and_management_system.Models
                 entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.TotalQuantity).HasColumnName("total_quantity");
+                entity.Property(e => e.ProductId).HasColumnName("product_id");
             });
 
             modelBuilder.Entity<Feedback>(entity =>
@@ -275,6 +276,8 @@ namespace pharma_sales_and_management_system.Models
                     .HasMaxLength(50)
                     .IsUnicode(false)
                     .HasColumnName("profile_pic");
+
+                entity.Property(e => e.IsConfirmed).HasColumnName("is_confirmed");
             });
 
             modelBuilder.Entity<MedicalShopProductStock>(entity =>

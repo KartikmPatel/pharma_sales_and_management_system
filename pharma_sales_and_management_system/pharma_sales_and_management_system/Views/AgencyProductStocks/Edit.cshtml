@@ -1,4 +1,4 @@
-﻿@model pharma_sales_and_management_system.Models.AgencyProductStock
+﻿@* @model pharma_sales_and_management_system.Models.AgencyProductStock
 
 @{
     ViewData["Title"] = "Edit";
@@ -19,6 +19,10 @@
                 <span asp-validation-for="TotalQuantity" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="ProductId" class="control-label">Product Name</label>
+                <select asp-for="ProductId" class="form-control" asp-items="ViewBag.ProductId"></select>
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
@@ -32,3 +36,4 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+ *@

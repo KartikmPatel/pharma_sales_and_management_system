@@ -22,6 +22,7 @@ namespace pharma_sales_and_management_system.Models
         public string City { get; set; } = null!;
         public string Password { get; set; } = null!;
         public string ProfilePic { get; set; } = null!;
+        public int IsConfirmed { get; set; }
 
         public virtual ICollection<Feedback> Feedbacks { get; set; }
         public virtual ICollection<MedicalOrder> MedicalOrders { get; set; }
