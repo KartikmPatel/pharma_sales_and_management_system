@@ -1,0 +1,66 @@
+﻿@model IEnumerable<pharma_sales_and_management_system.Models.ProductDetail>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+@{
+    Layout = "_MedicalLayout";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table" style="position:absolute;width:80%;">
+    <thead>
+        <tr>
+            <th>
+               @* @Html.DisplayNameFor(model => model.ProductImage)*@
+               Image
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.ProductName)*@
+                Name
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.RetailPrice)*@
+                Price
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.Disease)*@
+                Disease
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.ExpDate)*@
+                Expire Date
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductImage)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RetailPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Disease)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ExpDate)
+            </td>
+            <td>
+               <button class="btn btn-success"> Purchase </button>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

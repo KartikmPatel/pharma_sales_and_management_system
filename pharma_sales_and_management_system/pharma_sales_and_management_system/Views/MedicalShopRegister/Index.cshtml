@@ -4,21 +4,12 @@
     ViewData["Title"] = "Index";
 }
 
-@{
-    Layout = "_AgencyLayout";
-}
-
-<h1>Medical shop Details</h1>
-
-<form asp-action="Index" method="get">
-    <input type="text" name="search" />
-    <input type="submit" value="Search" />
-</form>
+<h1>Index</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table" style="position:absolute;width:80%;">
+<table class="table">
     <thead>
         <tr>
             <th>
@@ -40,9 +31,7 @@
                 @Html.DisplayNameFor(model => model.ProfilePic)
             </th>
             <th>
-                <center>
-                    Action
-                </center>
+                @Html.DisplayNameFor(model => model.IsConfirmed)
             </th>
             <th></th>
         </tr>
@@ -68,24 +57,8 @@
             <td>
                 @Html.DisplayFor(modelItem => item.ProfilePic)
             </td>
-            @* <td>
-                @Html.DisplayFor(modelItem => item.IsConfirmed)
-            </td> *@
             <td>
-                <center>
-
-                    @if (item.IsConfirmed == 1)
-                    {
-                        <button class="btn btn-secondary" disabled>Verified</button>
-                    }
-                    else
-                    {
-                    <form asp-action="Verify" method="post">
-                      <input type="hidden" name="verify" class="form-control" value="0" />
-                      <button type="submit" class="btn btn-primary" asp-route-id="@item.Id">Verify</button>
-                    </form>
-                    }
-                    </center>
+                @Html.DisplayFor(modelItem => item.IsConfirmed)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

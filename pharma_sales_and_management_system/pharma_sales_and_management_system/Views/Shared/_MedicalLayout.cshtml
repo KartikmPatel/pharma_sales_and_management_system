@@ -24,16 +24,16 @@
             padding: 20px; /* Add some padding for better readability */
         }
 
-        aside{
+        aside {
             flex: 0 0 10%; /* Sidebar takes up 10% of the available width */
             height: 100vh; /* Full height of the viewport */
-        float:left;
-        width:10%;
-        /*height:600px;*/
-        background-color:silver;
+            float: left;
+            width: 10%;
+            /*height:600px;*/
+            background-color: silver;
         }
 
-      </style>
+    </style>
 </head>
 <body>
     <aside>
@@ -42,25 +42,10 @@
                 <a class="nav-link text-dark" asp-area="">Dashboard</a>
             </li>
             <li id="n1" class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-controller="ProductCategories" asp-action="Index">Categories</a>
+                <a class="nav-link text-dark" asp-area="" asp-controller="MedicalMedicine" asp-action="Index">Medicine</a>
             </li>
             <li id="n1" class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-controller="ProductDetails" asp-action="Index">Products</a>
-            </li>
-            <li id="n1" class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-controller="AgencyOrders" asp-action="Index">Order</a>
-            </li>
-            <li id="n1" class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-controller="Medical" asp-action="Index">Stores</a>
-            </li>
-            <li id="n1" class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-controller="ProductDetails" asp-action="Index">Users</a>
-            </li>
-            <li id="n1" class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-controller="AgencyProductStocks" asp-action="Index">Stocks</a>
-            </li>
-            <li id="n1" class="nav-item">
-                <a class="nav-link text-dark" asp-area="" asp-controller="ProductDetails" asp-action="Index">Report</a>
+                <a class="nav-link text-dark" asp-area="" asp-controller="MedicalShopProductStocks" asp-action="Index">Stocks</a>
             </li>
         </ul>
     </aside>
