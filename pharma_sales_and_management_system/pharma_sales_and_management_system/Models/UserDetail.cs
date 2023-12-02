@@ -19,7 +19,7 @@ namespace pharma_sales_and_management_system.Models
         public string City { get; set; } = null!;
         public int ContactNo { get; set; }
         public int Pincode { get; set; }
-        public string? ProfilePic { get; set; }
+        public string ProfilePic { get; set; }
 
         public virtual ICollection<Feedback> Feedbacks { get; set; }
         public virtual ICollection<UserCart> UserCarts { get; set; }

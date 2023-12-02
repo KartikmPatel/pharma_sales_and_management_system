@@ -12,10 +12,12 @@ namespace pharma_sales_and_management_system.Controllers
     public class ProductDetailsController : Controller
     {
         private readonly pharma_managementContext _context;
+        private readonly IWebHostEnvironment _webHostEnv;
 
-        public ProductDetailsController(pharma_managementContext context)
+        public ProductDetailsController(pharma_managementContext context, IWebHostEnvironment webHostEnv)
         {
             _context = context;
+            _webHostEnv = webHostEnv;
         }
 
         // GET: ProductDetails
@@ -58,12 +60,22 @@ namespace pharma_sales_and_management_system.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ProductName,RetailPrice,ProductImage,Description,Disease,CategoryId,MfgDate,CompanyId,ExpDate")] ProductDetail productDetail)
+        public async Task<IActionResult> Create([Bind("Id,ProductName,RetailPrice,ProductImage,Description,Disease,CategoryId,MfgDate,CompanyId,ExpDate")] ProductDetail productDetail, IFormFile file)
         {
-            
-                _context.Add(productDetail);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+            string wwwRootPath = this._webHostEnv.WebRootPath;
+            if (file != null)
+            {
+                string filename = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                string productpath = Path.Combine(wwwRootPath, @"images\user");
+                using (var filestream = new FileStream(Path.Combine(productpath, filename), FileMode.Create))
+                {
+                    file.CopyTo(filestream);
+                }
+                productDetail.ProductImage = @"\images\user\" + filename;
+            }
+            _context.Add(productDetail);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
             
             //return View(productDetail);
         }
@@ -91,7 +103,7 @@ namespace pharma_sales_and_management_system.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ProductName,RetailPrice,ProductImage,Description,Disease,CategoryId,MfgDate,CompanyId,ExpDate")] ProductDetail productDetail)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,ProductName,RetailPrice,ProductImage,Description,Disease,CategoryId,MfgDate,CompanyId,ExpDate")] ProductDetail productDetail, IFormFile file)
         {
             if (id != productDetail.Id)
             {
@@ -100,7 +112,18 @@ namespace pharma_sales_and_management_system.Controllers
 
                 try
                 {
-                    _context.Update(productDetail);
+                string wwwRootPath = this._webHostEnv.WebRootPath;
+                if (file != null)
+                {
+                    string filename = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                    string productpath = Path.Combine(wwwRootPath, @"images\user");
+                    using (var filestream = new FileStream(Path.Combine(productpath, filename), FileMode.Create))
+                    {
+                        file.CopyTo(filestream);
+                    }
+                    productDetail.ProductImage = @"\images\user\" + filename;
+                }
+                _context.Update(productDetail);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)

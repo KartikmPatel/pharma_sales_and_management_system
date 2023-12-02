@@ -12,10 +12,12 @@ namespace pharma_sales_and_management_system.Controllers
     public class MedicalShopRegisterController : Controller
     {
         private readonly pharma_managementContext _context;
+        private readonly IWebHostEnvironment _webHostEnv;
 
-        public MedicalShopRegisterController(pharma_managementContext context)
+        public MedicalShopRegisterController(pharma_managementContext context, IWebHostEnvironment webHostEnv)
         {
             _context = context;
+            _webHostEnv = webHostEnv;
         }
 
         // GET: MedicalShopRegister
@@ -55,15 +57,22 @@ namespace pharma_sales_and_management_system.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,OwnerName,Email,ContactNo,City,Password,ProfilePic,IsConfirmed")] MedicalShopDetail medicalShopDetail)
+        public async Task<IActionResult> Create([Bind("Id,OwnerName,Email,ContactNo,City,Password,ProfilePic,IsConfirmed")] MedicalShopDetail medicalShopDetail, IFormFile file)
         {
-            if (ModelState.IsValid)
+            string wwwRootPath = this._webHostEnv.WebRootPath;
+            if (file != null)
             {
-                _context.Add(medicalShopDetail);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                string filename = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                string productpath = Path.Combine(wwwRootPath, @"images\user");
+                using (var filestream = new FileStream(Path.Combine(productpath, filename), FileMode.Create))
+                {
+                    file.CopyTo(filestream);
+                }
+                medicalShopDetail.ProfilePic = @"\images\user\" + filename;
             }
-            return View(medicalShopDetail);
+            _context.Add(medicalShopDetail);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index)); 
         }
 
         // GET: MedicalShopRegister/Edit/5
@@ -87,18 +96,26 @@ namespace pharma_sales_and_management_system.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,OwnerName,Email,ContactNo,City,Password,ProfilePic,IsConfirmed")] MedicalShopDetail medicalShopDetail)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,OwnerName,Email,ContactNo,City,Password,ProfilePic,IsConfirmed")] MedicalShopDetail medicalShopDetail, IFormFile file)
         {
             if (id != medicalShopDetail.Id)
             {
                 return NotFound();
             }
-
-            if (ModelState.IsValid)
-            {
                 try
                 {
-                    _context.Update(medicalShopDetail);
+                string wwwRootPath = this._webHostEnv.WebRootPath;
+                if (file != null)
+                {
+                    string filename = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                    string productpath = Path.Combine(wwwRootPath, @"images\user");
+                    using (var filestream = new FileStream(Path.Combine(productpath, filename), FileMode.Create))
+                    {
+                        file.CopyTo(filestream);
+                    }
+                    medicalShopDetail.ProfilePic = @"\images\user\" + filename;
+                }
+                _context.Update(medicalShopDetail);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -112,9 +129,7 @@ namespace pharma_sales_and_management_system.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(medicalShopDetail);
+                return RedirectToAction(nameof(Index));  
         }
 
         // GET: MedicalShopRegister/Delete/5

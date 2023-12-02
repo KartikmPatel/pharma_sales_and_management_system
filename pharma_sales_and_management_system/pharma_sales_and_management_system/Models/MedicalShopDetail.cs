@@ -21,7 +21,7 @@ namespace pharma_sales_and_management_system.Models
         public int ContactNo { get; set; }
         public string City { get; set; } = null!;
         public string Password { get; set; } = null!;
-        public string ProfilePic { get; set; } = null!;
+        public string ProfilePic { get; set; }
         public int IsConfirmed { get; set; }
 
         public virtual ICollection<Feedback> Feedbacks { get; set; }

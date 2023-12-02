@@ -66,7 +66,8 @@
                 @Html.DisplayFor(modelItem => item.Password)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ProfilePic)
+                <img src="@Html.DisplayFor(modelItem => item.ProfilePic)" height="50px" width="50px">
+                @* @Html.DisplayFor(modelItem => item.ProfilePic) *@
             </td>
             @* <td>
                 @Html.DisplayFor(modelItem => item.IsConfirmed)

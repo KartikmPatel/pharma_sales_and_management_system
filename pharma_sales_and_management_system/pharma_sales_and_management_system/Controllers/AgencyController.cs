@@ -12,10 +12,12 @@ namespace pharma_sales_and_management_system.Controllers
     public class AgencyController : Controller
     {
         private readonly pharma_managementContext _context;
+        private readonly IWebHostEnvironment _webHostEnv;
 
-        public AgencyController(pharma_managementContext context)
+        public AgencyController(pharma_managementContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnv = webHostEnvironment;
         }
 
         // GET: Agency
@@ -62,15 +64,23 @@ namespace pharma_sales_and_management_system.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,AgencyName,Email,ContactNo,Password,ProfileImage")] AgencyDetail agencyDetail)
+        public async Task<IActionResult> Create([Bind("Id,AgencyName,Email,ContactNo,Password,ProfileImage")] AgencyDetail agencyDetail, IFormFile file)
         {
-            if (ModelState.IsValid)
+            string wwwRootPath = this._webHostEnv.WebRootPath;
+            if (file != null)
             {
-                _context.Add(agencyDetail);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                string filename = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                string productpath = Path.Combine(wwwRootPath, @"images\user");
+                using (var filestream = new FileStream(Path.Combine(productpath, filename), FileMode.Create))
+                {
+                    file.CopyTo(filestream);
+                }
+                agencyDetail.ProfileImage = @"\images\user\" + filename;
             }
-            return View(agencyDetail);
+
+            _context.Add(agencyDetail);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Agency/Edit/5
@@ -94,17 +104,27 @@ namespace pharma_sales_and_management_system.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,AgencyName,Email,ContactNo,Password,ProfileImage")] AgencyDetail agencyDetail)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,AgencyName,Email,ContactNo,Password,ProfileImage")] AgencyDetail agencyDetail, IFormFile file)
         {
             if (id != agencyDetail.Id)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
-            {
+            
                 try
                 {
+                    string wwwRootPath = this._webHostEnv.WebRootPath;
+                    if (file != null)
+                    {
+                        string filename = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                        string productpath = Path.Combine(wwwRootPath, @"images\user");
+                        using (var filestream = new FileStream(Path.Combine(productpath, filename), FileMode.Create))
+                        {
+                            file.CopyTo(filestream);
+                        }
+                        agencyDetail.ProfileImage = @"\images\user\" + filename;
+                    }
                     _context.Update(agencyDetail);
                     await _context.SaveChangesAsync();
                 }
@@ -120,8 +140,7 @@ namespace pharma_sales_and_management_system.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
-            }
-            return View(agencyDetail);
+           
         }
 
         // GET: Agency/Delete/5

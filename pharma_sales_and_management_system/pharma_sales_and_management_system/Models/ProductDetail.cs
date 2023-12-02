@@ -18,7 +18,7 @@ namespace pharma_sales_and_management_system.Models
         public int Id { get; set; }
         public string ProductName { get; set; } = null!;
         public int RetailPrice { get; set; }
-        public string ProductImage { get; set; } = null!;
+        public string ProductImage { get; set; }
         public string Description { get; set; } = null!;
         public string Disease { get; set; } = null!;
         public int CategoryId { get; set; }

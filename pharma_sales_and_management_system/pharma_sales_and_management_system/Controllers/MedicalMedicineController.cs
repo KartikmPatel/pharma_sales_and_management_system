@@ -12,10 +12,12 @@ namespace pharma_sales_and_management_system.Controllers
     public class MedicalMedicineController : Controller
     {
         private readonly pharma_managementContext _context;
+        private readonly IWebHostEnvironment _webHostEnv;
 
-        public MedicalMedicineController(pharma_managementContext context)
+        public MedicalMedicineController(pharma_managementContext context, IWebHostEnvironment webHostEnv)
         {
             _context = context;
+            _webHostEnv = webHostEnv;
         }
 
         // GET: MedicalMedicine
@@ -58,17 +60,26 @@ namespace pharma_sales_and_management_system.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ProductName,RetailPrice,ProductImage,Description,Disease,CategoryId,MfgDate,CompanyId,ExpDate")] ProductDetail productDetail)
+        public async Task<IActionResult> Create([Bind("Id,ProductName,RetailPrice,ProductImage,Description,Disease,CategoryId,MfgDate,CompanyId,ExpDate")] ProductDetail productDetail, IFormFile file)
         {
-            if (ModelState.IsValid)
+            string wwwRootPath = this._webHostEnv.WebRootPath;
+            if (file != null)
             {
-                _context.Add(productDetail);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                string filename = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                string productpath = Path.Combine(wwwRootPath, @"images\user");
+                using (var filestream = new FileStream(Path.Combine(productpath, filename), FileMode.Create))
+                {
+                    file.CopyTo(filestream);
+                }
+                productDetail.ProductImage = @"\images\user\" + filename;
             }
+
+            _context.Add(productDetail);
+            await _context.SaveChangesAsync();
+
             ViewData["CategoryId"] = new SelectList(_context.ProductCategories, "Id", "Id", productDetail.CategoryId);
             ViewData["CompanyId"] = new SelectList(_context.Manufacturers, "Id", "Id", productDetail.CompanyId);
-            return View(productDetail);
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: MedicalMedicine/Edit/5
@@ -94,18 +105,27 @@ namespace pharma_sales_and_management_system.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ProductName,RetailPrice,ProductImage,Description,Disease,CategoryId,MfgDate,CompanyId,ExpDate")] ProductDetail productDetail)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,ProductName,RetailPrice,ProductImage,Description,Disease,CategoryId,MfgDate,CompanyId,ExpDate")] ProductDetail productDetail, IFormFile file)
         {
             if (id != productDetail.Id)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
-            {
                 try
                 {
-                    _context.Update(productDetail);
+                string wwwRootPath = this._webHostEnv.WebRootPath;
+                if (file != null)
+                {
+                    string filename = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                    string productpath = Path.Combine(wwwRootPath, @"images\user");
+                    using (var filestream = new FileStream(Path.Combine(productpath, filename), FileMode.Create))
+                    {
+                        file.CopyTo(filestream);
+                    }
+                    productDetail.ProductImage = @"\images\user\" + filename;
+                }
+                _context.Update(productDetail);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -119,11 +139,10 @@ namespace pharma_sales_and_management_system.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
-            }
+                    
             ViewData["CategoryId"] = new SelectList(_context.ProductCategories, "Id", "Id", productDetail.CategoryId);
             ViewData["CompanyId"] = new SelectList(_context.Manufacturers, "Id", "Id", productDetail.CompanyId);
-            return View(productDetail);
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: MedicalMedicine/Delete/5
