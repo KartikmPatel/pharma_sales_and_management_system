@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using pharma_sales_and_management_system.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace pharma_sales_and_management_system.Controllers
 {
@@ -20,24 +21,57 @@ namespace pharma_sales_and_management_system.Controllers
             _webHostEnv = webHostEnvironment;
         }
 
+        private bool IsUserAuthenticated()
+        {
+            return HttpContext.Session.GetInt32("AgencyId").HasValue;
+        }
+
         // GET: Agency
         public async Task<IActionResult> Index(string search)
         {
-            if(search != null)
+            if (!IsUserAuthenticated())
             {
-                var searchAgency = from a in _context.AgencyDetails
-                           where a.AgencyName.Contains(search) || a.Email.Contains(search) || a.ContactNo.ToString().Contains(search)
-                           select a;
-                return View(await searchAgency.ToListAsync());
+                return RedirectToAction(nameof(Login));
             }
-              return _context.AgencyDetails != null ? 
-                          View(await _context.AgencyDetails.ToListAsync()) :
-                          Problem("Entity set 'pharma_managementContext.AgencyDetails'  is null.");
+            else
+            {
+                var agencyId = HttpContext.Session.GetInt32("AgencyId");
+
+                if (!agencyId.HasValue)
+                {
+                    return RedirectToAction(nameof(Login));
+                }
+
+                var agencyDetail = await _context.AgencyDetails.FirstOrDefaultAsync(m => m.Id == agencyId.Value);
+
+                if (agencyDetail != null)
+                {
+                    if (search != null)
+                    {
+                        var searchAgency = from a in _context.AgencyDetails
+                                           where a.AgencyName.Contains(search) || a.Email.Contains(search) || a.ContactNo.ToString().Contains(search)
+                                           select a;
+
+                        return View(await searchAgency.ToListAsync());
+                    }
+
+                    //return View(agencyDetail);
+                    return View(new List<AgencyDetail> { agencyDetail });
+                }
+                return Problem("Entity set 'pharma_managementContext.AgencyDetails' is null.");
+            }
         }
+
+
 
         // GET: Agency/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction(nameof(Login));
+            }
+
             if (id == null || _context.AgencyDetails == null)
             {
                 return NotFound();
@@ -80,12 +114,19 @@ namespace pharma_sales_and_management_system.Controllers
 
             _context.Add(agencyDetail);
             await _context.SaveChangesAsync();
+
+            HttpContext.Session.SetInt32("AgencyId", agencyDetail.Id);
             return RedirectToAction(nameof(Index));
         }
 
         // GET: Agency/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction(nameof(Login));
+            }
+
             if (id == null || _context.AgencyDetails == null)
             {
                 return NotFound();
@@ -111,41 +152,45 @@ namespace pharma_sales_and_management_system.Controllers
                 return NotFound();
             }
 
-            
-                try
+            try
+            {
+                string wwwRootPath = this._webHostEnv.WebRootPath;
+                if (file != null)
                 {
-                    string wwwRootPath = this._webHostEnv.WebRootPath;
-                    if (file != null)
+                    string filename = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                    string productpath = Path.Combine(wwwRootPath, @"images\user");
+                    using (var filestream = new FileStream(Path.Combine(productpath, filename), FileMode.Create))
                     {
-                        string filename = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-                        string productpath = Path.Combine(wwwRootPath, @"images\user");
-                        using (var filestream = new FileStream(Path.Combine(productpath, filename), FileMode.Create))
-                        {
-                            file.CopyTo(filestream);
-                        }
-                        agencyDetail.ProfileImage = @"\images\user\" + filename;
+                        file.CopyTo(filestream);
                     }
-                    _context.Update(agencyDetail);
-                    await _context.SaveChangesAsync();
+                    agencyDetail.ProfileImage = @"\images\user\" + filename;
                 }
-                catch (DbUpdateConcurrencyException)
+                _context.Update(agencyDetail);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!AgencyDetailExists(agencyDetail.Id))
                 {
-                    if (!AgencyDetailExists(agencyDetail.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    return NotFound();
                 }
-                return RedirectToAction(nameof(Index));
-           
+                else
+                {
+                    throw;
+                }
+            }
+            return RedirectToAction(nameof(Index));
+
         }
 
         // GET: Agency/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction(nameof(Login));
+            }
+
             if (id == null || _context.AgencyDetails == null)
             {
                 return NotFound();
@@ -175,14 +220,47 @@ namespace pharma_sales_and_management_system.Controllers
             {
                 _context.AgencyDetails.Remove(agencyDetail);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool AgencyDetailExists(int id)
         {
-          return (_context.AgencyDetails?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.AgencyDetails?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login([Bind("Id,Email,Password")] AgencyDetail agencyDetail)
+        {
+            var agency = _context.AgencyDetails.FirstOrDefault(u => u.Email == agencyDetail.Email && u.Password == agencyDetail.Password);
+
+            if (agency != null)
+            {
+                // Store user's Id in session
+                HttpContext.Session.SetInt32("AgencyId", agency.Id);
+
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                return RedirectToAction(nameof(Login));
+            }
+        }
+
+        public IActionResult Logout()
+        {
+            // Clear user's session data
+            HttpContext.Session.Remove("AgencyId");
+
+            // Redirect to the login page or any other page after logout
+            return RedirectToAction(nameof(Login));
         }
     }
 }

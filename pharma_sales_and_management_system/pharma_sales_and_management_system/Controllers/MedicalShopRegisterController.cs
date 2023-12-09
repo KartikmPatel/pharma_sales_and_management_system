@@ -20,17 +20,45 @@ namespace pharma_sales_and_management_system.Controllers
             _webHostEnv = webHostEnv;
         }
 
+        private bool IsUserAuthenticated()
+        {
+            return HttpContext.Session.GetInt32("MedicalShopId").HasValue;
+        }
+
         // GET: MedicalShopRegister
         public async Task<IActionResult> Index()
         {
-              return _context.MedicalShopDetails != null ? 
-                          View(await _context.MedicalShopDetails.ToListAsync()) :
-                          Problem("Entity set 'pharma_managementContext.MedicalShopDetails'  is null.");
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction(nameof(Login));
+            }
+            else
+            {
+                var medicalShopId = HttpContext.Session.GetInt32("MedicalShopId");
+
+                if (!medicalShopId.HasValue)
+                {
+                    return RedirectToAction(nameof(Login));
+                }
+
+                var medicalShopDetail = await _context.MedicalShopDetails.FirstOrDefaultAsync(m => m.Id == medicalShopId.Value);
+
+                if (medicalShopDetail != null)
+                {
+                    return View(new List<MedicalShopDetail> { medicalShopDetail });
+                }
+                return Problem("Entity set 'pharma_managementContext.MedicalShopDetails'  is null.");
+            }                          
         }
 
         // GET: MedicalShopRegister/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction(nameof(Login));
+            }
+
             if (id == null || _context.MedicalShopDetails == null)
             {
                 return NotFound();
@@ -78,6 +106,11 @@ namespace pharma_sales_and_management_system.Controllers
         // GET: MedicalShopRegister/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction(nameof(Login));
+            }
+
             if (id == null || _context.MedicalShopDetails == null)
             {
                 return NotFound();
@@ -135,6 +168,11 @@ namespace pharma_sales_and_management_system.Controllers
         // GET: MedicalShopRegister/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction(nameof(Login));
+            }
+
             if (id == null || _context.MedicalShopDetails == null)
             {
                 return NotFound();
@@ -172,6 +210,39 @@ namespace pharma_sales_and_management_system.Controllers
         private bool MedicalShopDetailExists(int id)
         {
           return (_context.MedicalShopDetails?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login([Bind("Id,Email,Password")] MedicalShopDetail medicalShopDetail)
+        {
+            var medicalShop = _context.MedicalShopDetails.FirstOrDefault(u => u.Email == medicalShopDetail.Email && u.Password == medicalShopDetail.Password);
+
+            if (medicalShop != null)
+            {
+                // Store user's Id in session
+                HttpContext.Session.SetInt32("MedicalShopId", medicalShop.Id);
+
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                return RedirectToAction(nameof(Login));
+            }
+        }
+
+        public IActionResult Logout()
+        {
+            // Clear user's session data
+            HttpContext.Session.Remove("MedicalShopId");
+
+            // Redirect to the login page or any other page after logout
+            return RedirectToAction(nameof(Login));
         }
     }
 }

@@ -18,24 +18,52 @@ namespace pharma_sales_and_management_system.Controllers
             _context = context;
         }
 
+        private bool IsUserAuthenticated()
+        {
+            return HttpContext.Session.GetInt32("ManufacturerId").HasValue;
+        }
+
         // GET: Manufacturers
         public async Task<IActionResult> Index(string search)
         {
-            if (search != null)
+            if (!IsUserAuthenticated())
             {
-                var searchData = from m in _context.Manufacturers
-                                   where m.ComponyName.Contains(search) || m.Email.Contains(search) || m.ContactNo.ToString().Contains(search) || m.City.Contains(search)
-                                   select m;
-                return View(await searchData.ToListAsync());
+                return RedirectToAction(nameof(Login));
             }
-            return _context.Manufacturers != null ? 
-                          View(await _context.Manufacturers.ToListAsync()) :
-                          Problem("Entity set 'pharma_managementContext.Manufacturers'  is null.");
+            else
+            {
+                var manufacturerId = HttpContext.Session.GetInt32("ManufacturerId");
+
+                if (!manufacturerId.HasValue)
+                {
+                    return RedirectToAction(nameof(Login));
+                }
+
+                var manufacturerDetail = await _context.Manufacturers.FirstOrDefaultAsync(m => m.Id == manufacturerId.Value);
+
+                if (manufacturerDetail != null)
+                {
+                    if (search != null)
+                    {
+                        var searchData = from m in _context.Manufacturers
+                                         where m.ComponyName.Contains(search) || m.Email.Contains(search) || m.ContactNo.ToString().Contains(search) || m.City.Contains(search)
+                                         select m;
+                        return View(await searchData.ToListAsync());
+                    }
+                    return View(new List<Manufacturer> { manufacturerDetail });
+                }
+                return Problem("Entity set 'pharma_managementContext.Manufacturers'  is null.");
+            }
         }
 
         // GET: Manufacturers/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction(nameof(Login));
+            }
+
             if (id == null || _context.Manufacturers == null)
             {
                 return NotFound();
@@ -76,6 +104,11 @@ namespace pharma_sales_and_management_system.Controllers
         // GET: Manufacturers/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction(nameof(Login));
+            }
+
             if (id == null || _context.Manufacturers == null)
             {
                 return NotFound();
@@ -127,6 +160,11 @@ namespace pharma_sales_and_management_system.Controllers
         // GET: Manufacturers/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction(nameof(Login));
+            }
+
             if (id == null || _context.Manufacturers == null)
             {
                 return NotFound();
@@ -164,6 +202,39 @@ namespace pharma_sales_and_management_system.Controllers
         private bool ManufacturerExists(int id)
         {
           return (_context.Manufacturers?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login([Bind("Id,Email,Password")] Manufacturer manufacturer)
+        {
+            var manu = _context.Manufacturers.FirstOrDefault(u => u.Email == manufacturer.Email && u.Password == manufacturer.Password);
+
+            if (manu != null)
+            {
+                // Store user's Id in session
+                HttpContext.Session.SetInt32("ManufacturerId", manu.Id);
+
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                return RedirectToAction(nameof(Login));
+            }
+        }
+
+        public IActionResult Logout()
+        {
+            // Clear user's session data
+            HttpContext.Session.Remove("ManufacturerId");
+
+            // Redirect to the login page or any other page after logout
+            return RedirectToAction(nameof(Login));
         }
     }
 }

@@ -40,13 +40,15 @@
 
 <h1 style="margin-left:10%;">Agency Details</h1>
 
+<a asp-action="Logout">Logout</a>
+
 <form asp-action="Index" method="get" style="margin-left:10%;">
     <input type="text" name="search" />
     <input type="submit" value="Search" />
 </form>
 
 <p>
-    <a asp-action="Create" style="padding-left:2%;">Create New</a>
+    @* <a asp-action="Create" style="padding-left:2%;">Create New</a> *@
 </p>
 
 <table class="table" style="position:absolute;width:1000px;margin-left:150px;">
