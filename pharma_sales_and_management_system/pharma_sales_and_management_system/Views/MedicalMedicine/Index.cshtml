@@ -59,8 +59,15 @@
                 @Html.DisplayFor(modelItem => item.ExpDate)
             </td>
             <td>
-               <button class="btn btn-success"> Purchase </button>
-            </td>
+                    @if (ViewBag.Confirmed == 1)
+                    {
+                        <button class="btn btn-success"> Purchase </button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-secondary" disabled> Not Verified </button>
+                    }
+                </td>
         </tr>
 }
     </tbody>

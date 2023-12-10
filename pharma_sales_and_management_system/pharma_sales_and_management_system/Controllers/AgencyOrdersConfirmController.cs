@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Protocol.Plugins;
 using pharma_sales_and_management_system.Models;
 
 namespace pharma_sales_and_management_system.Controllers
@@ -18,11 +19,39 @@ namespace pharma_sales_and_management_system.Controllers
             _context = context;
         }
 
+        private bool IsUserAuthenticated()
+        {
+            return HttpContext.Session.GetInt32("ManufacturerId").HasValue;
+        }
+
         // GET: AgencyOrdersConfirm
         public async Task<IActionResult> Index()
         {
-            var pharma_managementContext = _context.AgencyOrders.Include(a => a.Agency).Include(a => a.Company).Include(a => a.Product);
-            return View(await pharma_managementContext.ToListAsync());
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction("Login", "Manufacturers");
+            }
+            else
+            {
+                var manufacturerId = HttpContext.Session.GetInt32("ManufacturerId");
+
+                if (!manufacturerId.HasValue)
+                {
+                    return RedirectToAction("Login", "Manufacturers");
+                }
+            
+                var mid = await (from m in _context.Manufacturers
+                                               where m.Id == manufacturerId.Value
+                                               select m.Id).FirstOrDefaultAsync();
+                if(mid != 0)
+                {
+                    var pharma_managementContext = await (from a in _context.AgencyOrders
+                                        where a.CompanyId == mid
+                                        select a).Include(a => a.Agency).Include(a => a.Company).Include(a => a.Product).ToListAsync();
+                    return View(pharma_managementContext);
+                }
+            }
+            return Problem("Entity set 'pharma_managementContext.Manufacturers'  is null.");
         }
 
         [HttpPost]

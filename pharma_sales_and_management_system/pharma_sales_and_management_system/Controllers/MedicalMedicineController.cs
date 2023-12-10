@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Protocol.Plugins;
 using pharma_sales_and_management_system.Models;
 
 namespace pharma_sales_and_management_system.Controllers
@@ -20,11 +21,29 @@ namespace pharma_sales_and_management_system.Controllers
             _webHostEnv = webHostEnv;
         }
 
+        private bool IsUserAuthenticated()
+        {
+            return HttpContext.Session.GetInt32("MedicalShopId").HasValue;
+        }
+
         // GET: MedicalMedicine
         public async Task<IActionResult> Index()
         {
-            var pharma_managementContext = _context.ProductDetails.Include(p => p.Category).Include(p => p.Company);
-            return View(await pharma_managementContext.ToListAsync());
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction("Login", "MedicalShopRegister");
+            }
+            else
+            {
+                var medicalShopId = HttpContext.Session.GetInt32("MedicalShopId");
+
+                var Confirmed = await (from c in _context.MedicalShopDetails
+                                       where c.IsConfirmed == 1 && c.Id == medicalShopId
+                                       select c.IsConfirmed).FirstOrDefaultAsync();
+                var pharma_managementContext = _context.ProductDetails.Include(p => p.Category).Include(p => p.Company);
+                ViewBag.Confirmed = Confirmed;
+                return View(await pharma_managementContext.ToListAsync());
+            }
         }
 
         // GET: MedicalMedicine/Details/5

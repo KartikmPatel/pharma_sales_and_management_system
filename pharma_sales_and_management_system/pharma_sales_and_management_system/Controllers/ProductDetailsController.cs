@@ -60,7 +60,7 @@ namespace pharma_sales_and_management_system.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ProductName,RetailPrice,ProductImage,Description,Disease,CategoryId,MfgDate,CompanyId,ExpDate")] ProductDetail productDetail, IFormFile file)
+        public async Task<IActionResult> Create([Bind("Id,ProductName,RetailPrice,ProductImage,Description,Disease,CategoryId,MfgDate,CompanyId,ExpDate")] ProductDetail productDetail, IFormFile file,AgencyProductStock stockDetails)
         {
             string wwwRootPath = this._webHostEnv.WebRootPath;
             if (file != null)
@@ -75,6 +75,16 @@ namespace pharma_sales_and_management_system.Controllers
             }
             _context.Add(productDetail);
             await _context.SaveChangesAsync();
+
+            if (productDetail.Id != 0)
+            {
+            var pid = productDetail.Id;
+            stockDetails.ProductId = pid;
+            stockDetails.TotalQuantity = 0;
+            _context.Add(stockDetails);
+            await _context.SaveChangesAsync();
+            }
+
             return RedirectToAction(nameof(Index));
             
             //return View(productDetail);
@@ -176,6 +186,15 @@ namespace pharma_sales_and_management_system.Controllers
                 _context.ProductDetails.Remove(productDetail);
             }
             
+            var sid = await (from s in _context.AgencyProductStocks
+                      where s.ProductId == id
+                      select s).FirstOrDefaultAsync();
+            
+            if (sid != null)
+            {
+                _context.AgencyProductStocks.Remove(sid);
+            }
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

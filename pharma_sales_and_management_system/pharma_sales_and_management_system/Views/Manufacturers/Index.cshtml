@@ -4,6 +4,10 @@
     ViewData["Title"] = "Index";
 }
 
+@{
+    Layout = "_companyLayout";
+}
+
 <h1>Manufacturers Details</h1>
 
 <form asp-action="Index" method="get">
@@ -14,7 +18,7 @@
 <p>
     <a asp-action="Logout">Logout</a>
 </p>
-<table class="table">
+<table class="table" style="position:absolute;width:80%;">
     <thead>
         <tr>
             <th>
