@@ -232,6 +232,7 @@ namespace pharma_sales_and_management_system.Controllers
             }
             else
             {
+                TempData["InvalidLogin"] = "Invalid Username OR Password";
                 return RedirectToAction(nameof(Login));
             }
         }

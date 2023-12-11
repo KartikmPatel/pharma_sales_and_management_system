@@ -207,5 +207,70 @@ namespace pharma_sales_and_management_system.Controllers
         {
           return (_context.ProductDetails?.Any(e => e.Id == id)).GetValueOrDefault();
         }
+
+        [HttpPost]
+        public ActionResult PurchaseMedicine(string productName,int companyId)
+        {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction("Login", "MedicalShopRegister");
+            }
+            else
+            {
+                var medicalShopId = HttpContext.Session.GetInt32("MedicalShopId");
+
+                var companyName = (from c in _context.Manufacturers
+                                  where c.Id == companyId
+                                  select c.ComponyName).FirstOrDefault();
+                ViewBag.medicalShopId = medicalShopId;
+                ViewBag.productName = productName;
+                ViewBag.companyName = companyName;
+            return View();
+            }
+        }
+
+        [HttpPost]
+        public int billCalculation(int totalQuantity,string productName)
+        {
+            var product_Price = (from p in _context.ProductDetails
+                                 where p.ProductName == productName
+                                 select p.RetailPrice).FirstOrDefault();
+
+            var totalAmount = product_Price * totalQuantity;
+
+            return totalAmount;
+        }
+
+        [HttpPost]
+        public ActionResult purchaseProduct(int medicalShopId,string productName,string companyName,int TotalQuantity,int BillAmount,MedicalOrder medicalOrder)
+        {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction("Login", "MedicalShopRegister");
+            }
+            else
+            {
+            var productId = (from p in _context.ProductDetails
+                            where p.ProductName == productName
+                            select p.Id).FirstOrDefault();
+            var companyId = (from c in _context.Manufacturers
+                             where c.ComponyName == companyName
+                             select c.Id).FirstOrDefault();
+
+            medicalOrder.MedicalShopId = medicalShopId;
+            medicalOrder.ProductId = productId;
+            medicalOrder.CompanyId = companyId;
+            medicalOrder.TotalQuantity = TotalQuantity;
+            medicalOrder.BillAmount = BillAmount;
+            medicalOrder.OrderDate = DateTime.Now;
+            medicalOrder.IsPlaced = 0;
+
+            _context.MedicalOrders.Add(medicalOrder);
+            _context.SaveChanges();
+
+             TempData["success"] = "Orders Successfully Placed";
+            return RedirectToAction(nameof(Index));
+            }
+        }
     }
 }

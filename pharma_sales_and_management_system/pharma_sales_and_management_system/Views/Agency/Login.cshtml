@@ -6,7 +6,12 @@
 
 <h1>Login</h1>
 
-<h4>AgencyDetail</h4>
+@if (TempData["InvalidLogin"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["InvalidLogin"]
+    </div>
+}
 <hr />
 <div class="row">
     <div class="col-md-4">

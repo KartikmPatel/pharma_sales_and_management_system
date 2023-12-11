@@ -9,6 +9,12 @@
 }
 
 <h1>Index</h1>
+@if (TempData["success"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["success"]
+    </div>
+}
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -61,7 +67,12 @@
             <td>
                     @if (ViewBag.Confirmed == 1)
                     {
-                        <button class="btn btn-success"> Purchase </button>
+                        @*<button class="btn btn-success" asp-controller="MedicalMedicine" asp-action="PurchaseMedicine"> Purchase </button>*@
+                        <form asp-action="PurchaseMedicine" asp-controller="MedicalMedicine" method="post">
+                            <input type="hidden" name="productName" value=@item.ProductName>
+                            <input type="hidden" name="companyId" value=@item.CompanyId>
+                        <button type="submit" class="btn btn-success">Purchase</button>
+                        </form>
                     }
                     else
                     {

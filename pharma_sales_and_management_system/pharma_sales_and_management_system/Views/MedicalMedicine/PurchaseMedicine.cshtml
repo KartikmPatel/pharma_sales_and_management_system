@@ -1,0 +1,72 @@
+﻿@model pharma_sales_and_management_system.Models.MedicalOrder
+
+@{
+    ViewData["Title"] = "PurchaseMedicine";
+}
+
+<h1>PurchaseMedicine</h1>
+
+<h4>MedicalOrder</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="purchaseProduct" asp-controller="MedicalMedicine">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+               @* <label asp-for="MedicalShopId" class="control-label"></label>
+                <select asp-for="MedicalShopId" class ="form-control" asp-items="ViewBag.MedicalShopId"></select>*@
+                <input type="hidden" name="medicalShopId" value="@ViewBag.medicalShopId" />
+            </div>
+            <div class="form-group">
+                @*<label asp-for="ProductId" class="control-label"></label>*@
+               @* <select asp-for="ProductId" class ="form-control" asp-items="ViewBag.ProductId"></select>*@
+                <lable class="control-label"> Product </lable>
+                <input type="text" name="productName" class="form-control" id="productName" value="@ViewBag.productName" readonly/>
+            </div>
+            <div class="form-group">
+                @*<label asp-for="CompanyId" class="control-label"></label>*@
+                @*<select asp-for="CompanyId" class ="form-control" asp-items="ViewBag.CompanyId"></select>*@
+                <lable class="control-label"> Company </lable>
+                <input type="text" name="companyName" class="form-control" value="@ViewBag.companyName" readonly />
+            </div>
+            <div class="form-group">
+                <label asp-for="TotalQuantity" class="control-label"></label>
+                <input asp-for="TotalQuantity" class="form-control" id="totalQuantity" />
+                <span asp-validation-for="TotalQuantity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BillAmount" class="control-label"></label>
+                <input asp-for="BillAmount" class="form-control" id="billAmount" readonly/>
+                <span asp-validation-for="BillAmount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(document).ready(function(){
+            $("#totalQuantity").on("input",function(){
+                var totalQuantity = $(this).val();
+                var productName = $("#productName").val();
+                $.ajax({
+                    url:"/MedicalMedicine/billCalculation",
+                    method:"post",
+                    data:{totalQuantity:totalQuantity,productName:productName},
+                    success:function(data)
+                    {
+                        $("#billAmount").val(data);
+                    }
+                })
+            })
+        })
+    </script>
+}
