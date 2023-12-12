@@ -18,11 +18,24 @@ namespace pharma_sales_and_management_system.Controllers
             _context = context;
         }
 
+        private bool IsUserAuthenticated()
+        {
+            return HttpContext.Session.GetInt32("MedicalShopId").HasValue;
+        }
+
         // GET: MedicalShopProductStocks
         public async Task<IActionResult> Index()
         {
-            var pharma_managementContext = _context.MedicalShopProductStocks.Include(m => m.MedicalShop).Include(m => m.Product);
-            return View(await pharma_managementContext.ToListAsync());
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction("Login", "MedicalShopRegister");
+            }
+            else
+            {
+                var medicalShopId = HttpContext.Session.GetInt32("MedicalShopId");
+                var pharma_managementContext = _context.MedicalShopProductStocks.Where(m => m.MedicalShopId == medicalShopId).Include(m => m.MedicalShop).Include(m => m.Product);
+                return View(await pharma_managementContext.ToListAsync());
+            }
         }
 
         // GET: MedicalShopProductStocks/Details/5

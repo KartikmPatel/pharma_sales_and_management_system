@@ -26,8 +26,18 @@ namespace pharma_sales_and_management_system.Controllers
         // GET: MedicalOrders
         public async Task<IActionResult> Index()
         {
-            var pharma_managementContext = _context.MedicalOrders.Include(m => m.Company).Include(m => m.MedicalShop).Include(m => m.Product);
-            return View(await pharma_managementContext.ToListAsync());
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction("Login", "MedicalShopRegister");
+            }
+            else
+            {
+                var medicalShopId = HttpContext.Session.GetInt32("MedicalShopId");
+                var pharma_managementContext = await (from o in _context.MedicalOrders
+                                               where o.MedicalShopId == medicalShopId
+                                               select o).Include(m => m.Company).Include(m => m.MedicalShop).Include(m => m.Product).ToListAsync();
+                return View(pharma_managementContext);
+            }
         }
 
         // GET: MedicalOrders/Details/5

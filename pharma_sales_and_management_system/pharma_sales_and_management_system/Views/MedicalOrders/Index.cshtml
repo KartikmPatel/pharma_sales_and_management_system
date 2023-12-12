@@ -66,10 +66,9 @@
                 @Html.DisplayFor(modelItem => item.OrderDate)
             </td>
             <td>
-               <button type="button" class="btn btn-danger">Delete</button>
+                <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>
         </tr>
-                    
         }
 }
     </tbody>
