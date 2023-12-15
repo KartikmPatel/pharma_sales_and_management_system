@@ -27,7 +27,7 @@ namespace pharma_sales_and_management_system.Controllers
         }
 
         // GET: Agency
-        public async Task<IActionResult> Index(string search)
+        public IActionResult Index(string search)
         {
             if (!IsUserAuthenticated())
             {
@@ -42,27 +42,24 @@ namespace pharma_sales_and_management_system.Controllers
                     return RedirectToAction(nameof(Login));
                 }
 
-                var agencyDetail = await _context.AgencyDetails.FirstOrDefaultAsync(m => m.Id == agencyId.Value);
+                var agencyDetail = _context.AgencyDetails.FirstOrDefault(m => m.Id == agencyId.Value);
 
                 if (agencyDetail != null)
                 {
                     if (search != null)
                     {
-                        var searchAgency = from a in _context.AgencyDetails
-                                           where a.AgencyName.Contains(search) || a.Email.Contains(search) || a.ContactNo.ToString().Contains(search)
-                                           select a;
-
-                        return View(await searchAgency.ToListAsync());
+                        var searchResults = new List<AgencyDetail>
+                        {
+                            agencyDetail
+                        }.Where(a => a.AgencyName.Contains(search) || a.Email.Contains(search) || a.ContactNo.ToString().Contains(search));
+                        return View(searchResults.ToList());
                     }
-
-                    //return View(agencyDetail);
                     return View(new List<AgencyDetail> { agencyDetail });
                 }
+
                 return Problem("Entity set 'pharma_managementContext.AgencyDetails' is null.");
             }
         }
-
-
 
         // GET: Agency/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -140,12 +137,9 @@ namespace pharma_sales_and_management_system.Controllers
             return View(agencyDetail);
         }
 
-        // POST: Agency/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,AgencyName,Email,ContactNo,Password,ProfileImage")] AgencyDetail agencyDetail, IFormFile file)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,AgencyName,Email,ContactNo,Password,ProfileImage")] AgencyDetail agencyDetail, IFormFile file, string oldfile)
         {
             if (id != agencyDetail.Id)
             {
@@ -165,6 +159,11 @@ namespace pharma_sales_and_management_system.Controllers
                     }
                     agencyDetail.ProfileImage = @"\images\user\" + filename;
                 }
+                else if (!string.IsNullOrEmpty(oldfile))
+                {
+                    agencyDetail.ProfileImage = oldfile;
+                }
+
                 _context.Update(agencyDetail);
                 await _context.SaveChangesAsync();
             }
@@ -180,7 +179,6 @@ namespace pharma_sales_and_management_system.Controllers
                 }
             }
             return RedirectToAction(nameof(Index));
-
         }
 
         // GET: Agency/Delete/5

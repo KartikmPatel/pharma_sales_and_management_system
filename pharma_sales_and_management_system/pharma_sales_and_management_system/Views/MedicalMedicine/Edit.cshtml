@@ -24,10 +24,11 @@
                 <span asp-validation-for="RetailPrice" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ProductImage" class="control-label"></label>
-                <input type="file" name="file" asp-for="ProductImage" class="form-control" />
-                @* <input asp-for="ProductImage" class="form-control" /> *@
-                <span asp-validation-for="ProductImage" class="text-danger"></span>
+                <label class="control-label" for="ProductImage">ProductImage</label>
+                <img src="@Html.DisplayFor(modelItem => Model.ProductImage)" height="50px" width="50px">
+                <input type="file" name="file" class="form-control" id="ProductImage">
+                <input type="hidden" name="oldfile" class="form-control" id="OldProductImage" value="@Model.ProductImage">
+                <span class="text-danger field-validation-valid" data-valmsg-for="ProductImage" data-valmsg-replace="true"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>

@@ -30,15 +30,18 @@
             </div>
             <div class="form-group">
                 <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" type="password" class="form-control" />
+                <input asp-for="Password" type="password" class="form-control" value="@Model.Password" />
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label asp-for="ProfileImage" class="control-label"></label>
-                <input type="file" name="file" asp-for="ProfileImage" class="form-control" />
-                @* <input asp-for="ProfileImage" class="form-control" /> *@
-                <span asp-validation-for="ProfileImage" class="text-danger"></span>
+                <label class="control-label" for="ProfileImage">ProfileImage</label>
+                <img src="@Html.DisplayFor(modelItem => Model.ProfileImage)" height="50px" width="50px">
+                <input type="file" name="file" class="form-control" id="ProfileImage">
+                <input type="hidden" name="oldfile" class="form-control" id="OldProfileImage" value="@Model.ProfileImage">
+                <span class="text-danger field-validation-valid" data-valmsg-for="ProfileImage" data-valmsg-replace="true"></span>
             </div>
+
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
@@ -51,5 +54,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

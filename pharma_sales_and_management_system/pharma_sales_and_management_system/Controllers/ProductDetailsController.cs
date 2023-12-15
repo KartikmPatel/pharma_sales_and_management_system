@@ -113,7 +113,7 @@ namespace pharma_sales_and_management_system.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ProductName,RetailPrice,ProductImage,Description,Disease,CategoryId,MfgDate,CompanyId,ExpDate")] ProductDetail productDetail, IFormFile file)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,ProductName,RetailPrice,ProductImage,Description,Disease,CategoryId,MfgDate,CompanyId,ExpDate")] ProductDetail productDetail, IFormFile file, string oldfile)
         {
             if (id != productDetail.Id)
             {
@@ -132,6 +132,10 @@ namespace pharma_sales_and_management_system.Controllers
                         file.CopyTo(filestream);
                     }
                     productDetail.ProductImage = @"\images\user\" + filename;
+                }
+                else if (!string.IsNullOrEmpty(oldfile))
+                {
+                    productDetail.ProductImage = oldfile;
                 }
                 _context.Update(productDetail);
                     await _context.SaveChangesAsync();

@@ -26,7 +26,7 @@ namespace pharma_sales_and_management_system.Controllers
         }
 
         // GET: MedicalShopRegister
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string search)
         {
             if (!IsUserAuthenticated())
             {
@@ -45,10 +45,19 @@ namespace pharma_sales_and_management_system.Controllers
 
                 if (medicalShopDetail != null)
                 {
+                    if (search != null)
+                    {
+                        var searchResults = new List<MedicalShopDetail>
+                {
+                    medicalShopDetail
+                }.Where(m => m.OwnerName.Contains(search) || m.Email.Contains(search) || m.ContactNo.ToString().Contains(search) || m.City.Contains(search) || m.ProfilePic.Contains(search));
+
+                        return View(searchResults.ToList());
+                    }
                     return View(new List<MedicalShopDetail> { medicalShopDetail });
                 }
-                return Problem("Entity set 'pharma_managementContext.MedicalShopDetails'  is null.");
-            }                          
+                return Problem("Entity set 'pharma_managementContext.MedicalShopDetails' is null.");
+            }
         }
 
         // GET: MedicalShopRegister/Details/5
@@ -129,7 +138,7 @@ namespace pharma_sales_and_management_system.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,OwnerName,Email,ContactNo,City,Password,ProfilePic,IsConfirmed")] MedicalShopDetail medicalShopDetail, IFormFile file)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,OwnerName,Email,ContactNo,City,Password,ProfilePic,IsConfirmed")] MedicalShopDetail medicalShopDetail, IFormFile file,string oldfile)
         {
             if (id != medicalShopDetail.Id)
             {
@@ -147,6 +156,10 @@ namespace pharma_sales_and_management_system.Controllers
                         file.CopyTo(filestream);
                     }
                     medicalShopDetail.ProfilePic = @"\images\user\" + filename;
+                }
+                else if (!string.IsNullOrEmpty(oldfile))
+                {
+                    medicalShopDetail.ProfilePic = oldfile;
                 }
                 _context.Update(medicalShopDetail);
                     await _context.SaveChangesAsync();

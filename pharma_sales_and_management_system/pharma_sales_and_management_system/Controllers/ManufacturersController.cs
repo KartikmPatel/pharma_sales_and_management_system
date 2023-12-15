@@ -45,16 +45,18 @@ namespace pharma_sales_and_management_system.Controllers
                 {
                     if (search != null)
                     {
-                        var searchData = from m in _context.Manufacturers
-                                         where m.ComponyName.Contains(search) || m.Email.Contains(search) || m.ContactNo.ToString().Contains(search) || m.City.Contains(search)
-                                         select m;
-                        return View(await searchData.ToListAsync());
+                        var searchResults = new List<Manufacturer>
+                        {
+                            manufacturerDetail
+                        }.Where(m => m.ComponyName.Contains(search) || m.Email.Contains(search) || m.ContactNo.ToString().Contains(search) || m.City.Contains(search));
+                        return View(searchResults.ToList());
                     }
                     return View(new List<Manufacturer> { manufacturerDetail });
                 }
-                return Problem("Entity set 'pharma_managementContext.Manufacturers'  is null.");
+                return Problem("Entity set 'pharma_managementContext.Manufacturers' is null.");
             }
         }
+
 
         // GET: Manufacturers/Details/5
         public async Task<IActionResult> Details(int? id)
