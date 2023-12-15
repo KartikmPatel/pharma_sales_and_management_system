@@ -5,3 +5,5 @@
 /.vs
 /pharma_sales_and_management_system/.vs/pharma_sales_and_management_system
 /pharma_sales_and_management_system/pharma_sales_and_management_system/obj
+/pharma_sales_and_management_system/pharma_sales_and_management_system/wwwroot/dist
+/pharma_sales_and_management_system/pharma_sales_and_management_system/wwwroot/plugins
