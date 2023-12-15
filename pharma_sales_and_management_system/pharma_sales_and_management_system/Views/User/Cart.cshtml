@@ -1,0 +1,164 @@
+﻿@model IEnumerable<CartViewModel>
+
+@{
+    ViewData["Title"] = "Cart";
+}
+
+<style>
+    /* Add your existing styles here */
+
+    .total-amount-section {
+        border: 1px solid #ddd;
+        padding: 10px;
+        margin-top: 20px;
+    }
+
+    .total-amount-header {
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+    }
+
+    .cart-summary {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .cart-summary-item {
+        flex: 1;
+        text-align: center;
+    }
+
+    .checkout-button {
+        margin-top: 10px;
+        text-align: center;
+    }
+</style>
+
+<h1>Cart</h1>
+
+@if (TempData["CartDeleted"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["CartDeleted"]
+    </div>
+}
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Product
+            </th>
+            <th>
+                Image
+            </th>
+            <th>
+                Price
+            </th>
+            <th>
+                Quantity
+            </th>
+            <th>
+                Total Amount (Per Product)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductName)
+                </td>
+                <td>
+                    <img src="@Html.DisplayFor(modelItem => item.ProductImage)" height="50px" width="50px">
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Mrp)
+                </td>
+                <td>
+                    <button class="quantity-button" data-operation="decrement" data-item-id="@item.Id">-</button>
+                    <span class="quantity-display" data-item-id="@item.Id">@Html.DisplayFor(modelItem => item.Quantity)</span>
+                    <button class="quantity-button" data-operation="increment" data-item-id="@item.Id">+</button>
+                </td>
+                <td class="total-per-product" data-item-id="@item.Id">@((item.Mrp * item.Quantity).ToString("0.00"))</td>
+                <td>
+                    <form asp-action="RemoveCartItem" asp-controller="User">
+                        <input type="hidden" name="cid" value="@item.Id">
+                        <button type="submit" class="btn btn-danger"> Remove Item </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="total-amount-section">
+    <div class="total-amount-header">
+        <center>
+        <h3>Your Cart Summary</h3>
+        </center>
+    </div>
+    <div class="cart-summary">
+        <div class="cart-summary-item">
+            <span>Total Amount:</span>
+            <span class="total-amount" id="totalAmount">0.00</span>
+        </div>
+        <!-- Add more summary items if needed -->
+    </div>
+    <div class="checkout-button">
+        <button class="btn btn-primary">Proceed to Checkout</button>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $(document).ready(function () {
+            $('.quantity-button').on('click', function () {
+                var operation = $(this).data('operation');
+                var itemId = $(this).data('item-id');
+                var quantityElement = $(`.quantity-display[data-item-id=${itemId}]`);
+                var totalPerProductElement = $(`.total-per-product[data-item-id=${itemId}]`);
+
+                $.ajax({
+                    url: '/User/UpdateCartItemQuantity', // Update the URL accordingly
+                    type: 'POST',
+                    data: { itemId: itemId, operation: operation },
+                    success: function (newQuantity) {
+                        quantityElement.text(newQuantity);
+                        updateTotalPerProduct(itemId); // Update total amount per product after quantity change
+                        updateTotalAmount(); // Update total amount after quantity change
+                    },
+                    error: function () {
+                        console.error('Error updating quantity.');
+                    }
+                });
+            });
+
+            function updateTotalPerProduct(itemId) {
+                var quantity = parseInt($(`.quantity-display[data-item-id=${itemId}]`).text());
+                var mrp = parseFloat($(`.quantity-display[data-item-id=${itemId}]`).closest('tr').find('td:eq(2)').text());
+                var totalPerProduct = quantity * mrp;
+
+                $(`.total-per-product[data-item-id=${itemId}]`).text(totalPerProduct.toFixed(2));
+            }
+
+            function updateTotalAmount() {
+                var totalAmount = 0;
+
+                $('.total-per-product').each(function () {
+                    totalAmount += parseFloat($(this).text());
+                });
+
+                $('#totalAmount').text(totalAmount.toFixed(2));
+            }
+
+            // Initial calculation of total amount
+            updateTotalAmount();
+        });
+    </script>
+}

@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/pharma_sales_and_management_system.styles.css" asp-append-version="true" />
+    <style>
+        #n1 {
+            color: black;
+            margin-left: 30px;
+            cursor: pointer;
+        }
+
+        body {
+            display: flex;
+        }
+
+
+        main {
+            flex: 1; /* Main content area takes up the remaining space */
+            padding: 20px; /* Add some padding for better readability */
+        }
+
+        aside {
+            flex: 0 0 10%; /* Sidebar takes up 10% of the available width */
+            height: 100vh; /* Full height of the viewport */
+            float: left;
+            width: 10%;
+            /*height:600px;*/
+            background-color: silver;
+        }
+
+    </style>
+</head>
+<body>
+    <aside>
+        <ul class="navbar-nav flex-grow-1">
+            <li id="n1" class="nav-item">
+                <a class="nav-link text-dark" asp-area="">Dashboard</a>
+            </li>
+            <li id="n1" class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Index">Products</a>
+            </li>
+            <li id="n1" class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Cart">Cart</a>
+            </li>
+        </ul>
+    </aside>
+    <div>
+        @RenderBody()
+    </div>
+</body>
+</html>

@@ -114,7 +114,7 @@ namespace pharma_sales_and_management_system.Controllers
                 medicalSellingProduct.MedicalShopId = Convert.ToInt32(medicalShopId);
 
                 var sellingDetails = await (from c in _context.MedicalSellingProducts
-                                 where c.ProductId == productId
+                                 where c.ProductId == productId && c.MedicalShopId == medicalShopId
                                  select c).FirstOrDefaultAsync();
 
                 if(sellingDetails != null)
@@ -130,7 +130,7 @@ namespace pharma_sales_and_management_system.Controllers
                     var selectListItems = productNames.Select(name => new SelectListItem { Text = name, Value = name }).ToList();
 
                     ViewBag.ProductName = selectListItems;
-                    TempData["repeatDataError"] = "Medicine is already Exits in the selling mode";
+                    TempData["repeatDataError"] = "Medicine is already in selling ";
                     return View(medicalSellingProduct);
                 }
                 else

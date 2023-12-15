@@ -26,8 +26,15 @@
                 </select>
             </div>
             <div class="form-group">
-                <label asp-for="Mrp" class="control-label"></label>
-                <input asp-for="Mrp" id="mrp" class="form-control" readonly />
+                @*<label asp-for="actualPrice" class="control-label"></label>*@
+                <lable> Actual Price :-  </lable>
+                <input type="text" id="actualmrp" class="form-control" readonly />
+                @*<span asp-validation-for="Mrp" class="text-danger"></span>*@
+            </div>         
+            <div class="form-group">
+                @*<label asp-for="Mrp" class="control-label"></label>*@
+                <lable> Selling Price :-  </lable>
+                <input asp-for="Mrp" id="mrp" class="form-control" />
                 <span asp-validation-for="Mrp" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -52,7 +59,7 @@
                     method: "post",
                     data: { productName: productName },
                     success: function (data) {
-                        $("#mrp").val(data);
+                        $("#actualmrp").val(data);
                     }
                 })
             })

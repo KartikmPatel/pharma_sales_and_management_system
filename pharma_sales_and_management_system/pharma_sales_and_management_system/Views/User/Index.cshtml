@@ -1,0 +1,64 @@
+﻿@model IEnumerable<MedicalSellingProductViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+@if (TempData["CartAdded"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["CartAdded"]
+    </div>
+}
+
+@*<p>
+    <a asp-action="Create">Create New</a>
+</p>*@
+<table class="table">
+    <thead>
+        <tr>
+            @*<th>
+            @Html.DisplayNameFor(model => model.Item3.Id)
+            </th>*@
+            <th>
+                @*@Html.DisplayNameFor(model => model.Item3.ProductName)*@
+                Product
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.Item3.)*@
+                Price
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.Description)*@
+                Image
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Mrp)
+                </td>
+                <td>
+                    <img src="@Html.DisplayFor(modelItem => item.Image)" height="50px" width="50px">
+                </td>
+                <td>
+                    <form asp-action="DetailProduct" asp-controller="User">
+                        <input type="hidden" name="mid" value="@item.Id">
+                        <input type="hidden" name="mrp" value="@item.Mrp">
+                        <input type="hidden" name="productName" value="@item.ProductName">
+                        <button type="submit">Show Details</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

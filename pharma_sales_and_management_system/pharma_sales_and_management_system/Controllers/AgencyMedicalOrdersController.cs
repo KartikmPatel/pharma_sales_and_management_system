@@ -49,7 +49,7 @@ namespace pharma_sales_and_management_system.Controllers
                 _context.SaveChanges();
                 
                 var sDetail = (from p in _context.MedicalShopProductStocks
-                             where p.ProductId == pid
+                             where p.ProductId == pid && p.MedicalShopId == mid 
                              select p).FirstOrDefault();
 
                 if(sDetail != null)
