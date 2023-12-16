@@ -8,16 +8,14 @@
     Layout = "_AgencyLayout";
 }
 
-<h1>Medical shop Details</h1>
+<h1>Medical shop Requests</h1>
 
 <form asp-action="Index" method="get">
     <input type="text" name="search" />
     <input type="submit" value="Search" />
 </form>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+
 <table class="table" style="position:relative;margin-left:20%;width:80%;">
     <thead>
         <tr>
@@ -33,9 +31,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.City)
             </th>
-            <th>
+           @* <th>
                 @Html.DisplayNameFor(model => model.Password)
-            </th>
+            </th>*@
             <th>
                 @Html.DisplayNameFor(model => model.ProfilePic)
             </th>
@@ -44,7 +42,6 @@
                     Action
                 </center>
             </th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -62,9 +59,9 @@
             <td>
                 @Html.DisplayFor(modelItem => item.City)
             </td>
-            <td>
+           @* <td>
                 @Html.DisplayFor(modelItem => item.Password)
-            </td>
+            </td>*@
             <td>
                 <img src="@Html.DisplayFor(modelItem => item.ProfilePic)" height="50px" width="50px">
                 @* @Html.DisplayFor(modelItem => item.ProfilePic) *@
@@ -87,11 +84,6 @@
                     </form>
                     }
                     </center>
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>
         </tr>
 }

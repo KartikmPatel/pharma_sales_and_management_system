@@ -103,7 +103,7 @@ namespace pharma_sales_and_management_system.Controllers
             }
         }
 
-        public IActionResult addCart(int mid,int pid,UserCart userCart)
+        public IActionResult addCart(int mid, int pid, UserCart userCart)
         {
             if (!IsUserAuthenticated())
             {
@@ -117,8 +117,24 @@ namespace pharma_sales_and_management_system.Controllers
                 userCart.ProductId = pid;
                 userCart.Quantity = 1;
                 userCart.MedicalShopId = mid;
-                _context.UserCarts.Add(userCart);
-                 _context.SaveChanges();
+
+                // Check if the same MedicalShopId and ProductId combination exists in the cart
+                var existingCartItem = _context.UserCarts
+                    .FirstOrDefault(c => c.MedicalShopId == userCart.MedicalShopId && c.ProductId == userCart.ProductId);
+
+                if (existingCartItem != null)
+                {
+                    // If it exists, update the quantity
+                    existingCartItem.Quantity += 1;
+                    _context.UserCarts.Update(existingCartItem);
+                }
+                else
+                {
+                    // If it doesn't exist, add a new entry
+                    _context.UserCarts.Add(userCart);
+                }
+
+                _context.SaveChanges();
 
                 TempData["CartAdded"] = "Product Successfully Add in Cart";
                 return RedirectToAction(nameof(Index));

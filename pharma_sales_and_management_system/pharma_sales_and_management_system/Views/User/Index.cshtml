@@ -13,52 +13,30 @@
     </div>
 }
 
-@*<p>
-    <a asp-action="Create">Create New</a>
-</p>*@
-<table class="table">
-    <thead>
-        <tr>
-            @*<th>
-            @Html.DisplayNameFor(model => model.Item3.Id)
-            </th>*@
-            <th>
-                @*@Html.DisplayNameFor(model => model.Item3.ProductName)*@
-                Product
-            </th>
-            <th>
-                @*@Html.DisplayNameFor(model => model.Item3.)*@
-                Price
-            </th>
-            <th>
-                @*@Html.DisplayNameFor(model => model.Description)*@
-                Image
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ProductName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Mrp)
-                </td>
-                <td>
-                    <img src="@Html.DisplayFor(modelItem => item.Image)" height="50px" width="50px">
-                </td>
-                <td>
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                @if (!string.IsNullOrEmpty(item.Image))
+                {
+                    <img src="@item.Image" class="card-img-top" alt="Product Image">
+                }
+                else
+                {
+                    <img src="path_to_placeholder_image" class="card-img-top" alt="Placeholder Image">
+                }
+                <div class="card-body">
+                    <h5 class="card-title">@item.ProductName</h5>
+                    <p class="card-text">Price: @item.Mrp</p>
                     <form asp-action="DetailProduct" asp-controller="User">
                         <input type="hidden" name="mid" value="@item.Id">
                         <input type="hidden" name="mrp" value="@item.Mrp">
                         <input type="hidden" name="productName" value="@item.ProductName">
-                        <button type="submit">Show Details</button>
+                        <button type="submit" class="btn btn-outline-primary">Show Details</button>
                     </form>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+                </div>
+            </div>
+        </div>
+    }
+</div>
