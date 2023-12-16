@@ -60,8 +60,9 @@ namespace pharma_sales_and_management_system.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ProductId,Quantity,Date,AgencyId,CompanyId,IsDelivered")] AgencyOrder agencyOrder)
+        public async Task<IActionResult> Create([Bind("Id,ProductId,Quantity,AgencyId,CompanyId,IsDelivered")] AgencyOrder agencyOrder)
         {
+            agencyOrder.Date = DateTime.Now;
                 _context.Add(agencyOrder);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
