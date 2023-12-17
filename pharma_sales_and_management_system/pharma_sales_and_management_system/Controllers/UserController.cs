@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -99,7 +100,7 @@ namespace pharma_sales_and_management_system.Controllers
                 var companyData = _context.Manufacturers.FirstOrDefault(x => x.Id == productData.CompanyId);
                 var categoryData = _context.ProductCategories.FirstOrDefault(x => x.Id == productData.CategoryId);
 
-            return View((productData.Id,productData.ProductName,productData.Description,productData.RetailPrice,productData.Disease,companyData.ComponyName,productData.ProductImage,productData.ExpDate,categoryData.CategoryName,medicalData.Id));
+            return View((productData.Id,productData.ProductName,productData.Description,medicalSellingData.Mrp,productData.Disease,companyData.ComponyName,productData.ProductImage,productData.ExpDate,categoryData.CategoryName,medicalData.Id));
             }
         }
 
@@ -118,19 +119,16 @@ namespace pharma_sales_and_management_system.Controllers
                 userCart.Quantity = 1;
                 userCart.MedicalShopId = mid;
 
-                // Check if the same MedicalShopId and ProductId combination exists in the cart
                 var existingCartItem = _context.UserCarts
-                    .FirstOrDefault(c => c.MedicalShopId == userCart.MedicalShopId && c.ProductId == userCart.ProductId);
+                    .FirstOrDefault(c => c.MedicalShopId == userCart.MedicalShopId && c.ProductId == userCart.ProductId && c.UserId == userId);
 
                 if (existingCartItem != null)
                 {
-                    // If it exists, update the quantity
                     existingCartItem.Quantity += 1;
                     _context.UserCarts.Update(existingCartItem);
                 }
                 else
                 {
-                    // If it doesn't exist, add a new entry
                     _context.UserCarts.Add(userCart);
                 }
 
@@ -226,6 +224,95 @@ namespace pharma_sales_and_management_system.Controllers
 
                 TempData["CartDeleted"] = "Product Successfully Removed";
                 return RedirectToAction(nameof(Cart));
+            }
+        }
+
+        [HttpPost]
+        public IActionResult Order(List<int> cIds, List<int> mrps)
+        {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction(nameof(Login));
+            }
+            else
+            {
+                using (var dbContext = _context)
+                {
+                    var userId = HttpContext.Session.GetInt32("UserId");
+                    var user = _context.UserDetails.FirstOrDefault(x => x.Id == userId);
+
+                    for (int i = 0; i < cIds.Count; i++)
+                    {
+                        var cart = _context.UserCarts.FirstOrDefault(x=>x.Id == cIds[i]);
+                        var order = new UserOrder
+                        {
+                            ProductId = cart.ProductId,
+                            MedicalShopId = cart.MedicalShopId,
+                            UserId = Convert.ToInt32(userId),
+                            Quantity = cart.Quantity,
+                            TotalAmount = cart.Quantity * mrps[i], 
+                            OrderDate = DateTime.Now,
+                            IsDelivered = 0,
+                            OrderAddress = user.City,
+                            OrderCity = user.City
+                };
+                        dbContext.UserOrders.Add(order);
+                        dbContext.UserCarts.Remove(cart);
+                    
+                    }
+                    dbContext.SaveChanges();
+                }
+                TempData["OrderSuccess"] = "Order Successfully Placed";
+                return RedirectToAction(nameof(Index));
+
+            }
+        }
+
+        public IActionResult OrderHistory()
+        {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction(nameof(Login));
+            }
+            else
+            {
+              
+                var userId = HttpContext.Session.GetInt32("UserId");
+                var data = _context.UserOrders
+                    .Where(o => o.UserId == userId)
+                    .Select(o => new OrderViewModel
+                    {
+                        Id = o.Id,
+                        totalAmount = o.TotalAmount,
+                        Quantity = o.Quantity,
+                        Image = _context.ProductDetails
+                            .Where(i => i.Id == o.ProductId)
+                            .Select(i => i.ProductImage)
+                            .FirstOrDefault(),
+                        productName = _context.ProductDetails
+                            .Where(i => i.Id == o.ProductId)
+                            .Select(i => i.ProductName)
+                            .FirstOrDefault(),
+                        is_delivered = o.IsDelivered
+                    })
+                    .ToList();
+                return View(data);
+            }
+        }
+
+        public IActionResult OrderDetail(int oId)
+        {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction(nameof(Login));
+            }
+            else
+            {
+                var orderData = _context.UserOrders.FirstOrDefault(x => x.Id == oId);
+                var productData = _context.ProductDetails.FirstOrDefault(x => x.Id == orderData.ProductId);
+                var medicalSellingData = _context.MedicalSellingProducts.FirstOrDefault(x => x.MedicalShopId == orderData.MedicalShopId && x.ProductId == orderData.ProductId);
+                var categoryData = _context.ProductCategories.FirstOrDefault(x => x.Id == productData.CategoryId);
+                return View((orderData.Id,orderData.Quantity,orderData.TotalAmount,orderData.IsDelivered,orderData.OrderAddress,productData.Id,productData.ProductName,categoryData.CategoryName,productData.ProductImage,medicalSellingData.Mrp));
             }
         }
         public async Task<IActionResult> Details(int? id)

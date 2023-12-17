@@ -105,10 +105,19 @@
             <span>Total Amount:</span>
             <span class="total-amount" id="totalAmount">0.00</span>
         </div>
-        <!-- Add more summary items if needed -->
     </div>
     <div class="checkout-button">
-        <button class="btn btn-primary">Proceed to Checkout</button>
+        <form asp-action="Order" asp-controller="User" method="post">
+            @foreach (var item in Model)
+            {
+                <input type="hidden" name="cIds" value="@item.Id"/>
+                @*<input type="hidden" name="productIds[]" value="@item.productId" />
+                <input type="hidden" name="medicalIds[]" value="@item.medicalId" />
+                <input type="hidden" name="quantities[]" value="@item.Quantity" />*@
+                <input type="hidden" name="mrps" value="@item.Mrp" />
+            }
+            <button type="submit" class="btn btn-primary">Proceed to Checkout</button>
+        </form>
     </div>
 </div>
 

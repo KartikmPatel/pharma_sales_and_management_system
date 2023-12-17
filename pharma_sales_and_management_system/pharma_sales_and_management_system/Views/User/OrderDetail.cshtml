@@ -1,0 +1,58 @@
+﻿@model (int Id, int quantity, int totalAmount, int isDelivered, string Address, int productId, string productName, string categoryName, string Image, int MRP)
+
+@{
+    ViewData["Title"] = "OrderDetail";
+}
+
+<div class="container mt-5">
+    <h1 class="display-4">Order Detail</h1>
+    <hr />
+
+    <div class="row">
+        <div class="col-md-6">
+            <!-- Display Product Image -->
+            <img src="@Html.DisplayFor(model => model.Image)" class="img-fluid rounded" alt="Product Image" style="max-width: 100%;">
+        </div>
+        <div class="col-md-6">
+            <!-- Display Order Details and Product Details -->
+            <dl class="row">
+                <dt class="col-sm-4">Order ID</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.Id)</dd>
+
+                <dt class="col-sm-4">Quantity</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.quantity)</dd>
+
+                <dt class="col-sm-4">Total Amount</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.totalAmount)</dd>
+
+                <dt class="col-sm-4">Order Status</dt>
+                <dd class="col-sm-8">
+                    @if (Model.isDelivered == 0)
+                    {
+                        <span class="text-secondary">Pending</span>
+                    }
+                    else if (Model.isDelivered == 1)
+                    {
+                        <span class="text-success">Delivered</span>
+                    }
+                </dd>
+
+                <dt class="col-sm-4">Address</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.Address)</dd>
+
+                <dt class="col-sm-4">Product Name</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.productName)</dd>
+
+                <dt class="col-sm-4">Price</dt>
+                <dd class="col-sm-8">&#8377;@Html.DisplayFor(model => model.MRP)</dd>
+
+                <dt class="col-sm-4">Category</dt>
+                <dd class="col-sm-8">@Html.DisplayFor(model => model.categoryName)</dd>
+            </dl>
+        </div>
+    </div>
+</div>
+
+<div>
+    <a asp-action="OrderHistory" class="btn btn-primary">Back to List</a>
+</div>
