@@ -34,8 +34,8 @@ namespace pharma_sales_and_management_system.Controllers
             {
                 var medicalShopId = HttpContext.Session.GetInt32("MedicalShopId");
                 var pharma_managementContext = await (from o in _context.MedicalOrders
-                                               where o.MedicalShopId == medicalShopId
-                                               select o).Include(m => m.Company).Include(m => m.MedicalShop).Include(m => m.Product).ToListAsync();
+                                                      where o.MedicalShopId == medicalShopId
+                                                      select o).Include(m => m.Company).Include(m => m.MedicalShop).Include(m => m.Product).ToListAsync();
                 return View(pharma_managementContext);
             }
         }
@@ -181,14 +181,79 @@ namespace pharma_sales_and_management_system.Controllers
             {
                 _context.MedicalOrders.Remove(medicalOrder);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
+        public IActionResult UserOrder()
+        {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction("Login", "MedicalShopRegister");
+            }
+            else
+            {
+                var medicalShopId = HttpContext.Session.GetInt32("MedicalShopId");
+                var data = from o in _context.UserOrders
+                           where o.MedicalShopId == medicalShopId
+                           select new UserOrderView
+                           {
+                               Id = o.Id,
+                               productName = (from p in _context.ProductDetails
+                                              where p.Id == o.ProductId
+                                              select p.ProductName).FirstOrDefault(),
+                               Image = (from p in _context.ProductDetails
+                                        where p.Id == o.ProductId
+                                        select p.ProductImage).FirstOrDefault(),
+                               userName = (from u in _context.UserDetails
+                                           where u.Id == o.UserId
+                                           select u.Name).FirstOrDefault(),
+                               quantity = o.Quantity,
+                               totalAmount = o.TotalAmount,
+                               orderDate = o.OrderDate,
+                               isDelivered = o.IsDelivered,
+                               orderAddress = o.OrderAddress
+                           };
+                return View(data);
+            }
+        }
+
+        [HttpPost]
+        public IActionResult AcceptUserOrder(int oId)
+        {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction("Login", "MedicalShopRegister");
+            }
+            else
+            {
+                var orderData = _context.UserOrders.FirstOrDefault(x=>x.Id == oId);
+
+                var stockData = _context.MedicalShopProductStocks.FirstOrDefault(x=>x.ProductId == orderData.ProductId && x.MedicalShopId == orderData.MedicalShopId);
+
+                if(stockData.TotalQuantity < orderData.Quantity)
+                {
+                    TempData["lessQuantity"] = "Not Sufficient Quantity for Product";
+                    return RedirectToAction(nameof(UserOrder));
+                }
+                else
+                {
+                    stockData.TotalQuantity = stockData.TotalQuantity - orderData.Quantity;
+
+                    orderData.IsDelivered = 1;
+                    _context.SaveChanges();
+
+                    TempData["OrderDone"] = "Order Successfully Confirmed";
+                    return RedirectToAction(nameof(UserOrder));
+                }
+                return View();
+            }
+        }
+
         private bool MedicalOrderExists(int id)
         {
-          return (_context.MedicalOrders?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.MedicalOrders?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

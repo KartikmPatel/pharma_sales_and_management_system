@@ -1,0 +1,104 @@
+﻿@model IEnumerable<UserOrderView>
+
+@{
+    ViewData["Title"] = "UserOrder";
+}
+
+@{
+    Layout = "_MedicalLayout";
+}
+
+
+<div class="container">
+
+@if (TempData["OrderDone"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["OrderDone"]
+    </div>
+}
+
+@if (TempData["lessQuantity"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["lessQuantity"]
+    </div>
+}
+<h1>UserOrders</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @*@Html.DisplayNameFor(model => model.Quantity)*@
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.TotalAmount)*@
+                Product
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.OrderDate)*@
+                User
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.IsDelivered)*@
+                Quantity
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.OrderAddress)*@
+                Total Amount
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.OrderCity)*@
+                Date
+            </th>
+            <th>
+                @*@Html.DisplayNameFor(model => model.MedicalShop)*@
+                Address
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+             <img src="@Html.DisplayFor(modelItem => item.Image)" height="50px" width="50px">
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.productName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.userName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.quantity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.totalAmount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.orderDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.orderAddress)
+            </td>
+            <td>
+                    @if (item.isDelivered == 0)
+                    {
+                        <form asp-action="AcceptUserOrder" asp-controller="MedicalOrders" method="post">
+                            <input type="hidden" name="oId" value="@item.Id">
+                            <button type="submit" class="btn btn-primary">Accept</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <button class="btn btn-secondary">Confirmed</button>
+                    }
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+</div>

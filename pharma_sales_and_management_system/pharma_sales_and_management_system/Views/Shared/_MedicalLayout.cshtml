@@ -117,16 +117,16 @@
 
             <!-- Right navbar links -->
             <ul class="navbar-nav ml-auto">
-              
+
                 <li class="nav-item">
                     <a class="nav-link" data-widget="fullscreen" href="#" role="button">
                         <i class="fas fa-expand-arrows-alt"></i>
                     </a>
                 </li>
                 @* <li class="nav-item">
-                    <a class="nav-link" data-widget="control-sidebar" data-controlsidebar-slide="true" href="#" role="button">
-                        <i class="fas fa-th-large"></i>
-                    </a>
+                <a class="nav-link" data-widget="control-sidebar" data-controlsidebar-slide="true" href="#" role="button">
+                <i class="fas fa-th-large"></i>
+                </a>
                 </li> *@
             </ul>
         </nav>
@@ -134,39 +134,39 @@
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
-           @*  <a href="index3.html" class="brand-link">
-                <img src="dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-                <span class="brand-text font-weight-light">AdminLTE 3</span>
+            @*  <a href="index3.html" class="brand-link">
+            <img src="dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+            <span class="brand-text font-weight-light">AdminLTE 3</span>
             </a> *@
 
             <!-- Sidebar -->
             <div class="sidebar">
                 <!-- Sidebar user panel (optional) -->
                 @* <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-                    <div class="image">
-                        <img src="dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
-                    </div>
-                    <div class="info">
-                        <a href="#" class="d-block">Alexander Pierce</a>
-                    </div>
+                <div class="image">
+                <img src="dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+                </div>
+                <div class="info">
+                <a href="#" class="d-block">Alexander Pierce</a>
+                </div>
                 </div> *@
 
                 <!-- SidebarSearch Form -->
                 @* <div class="form-inline">
-                    <div class="input-group" data-widget="sidebar-search">
-                        <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
-                        <div class="input-group-append">
-                            <button class="btn btn-sidebar">
-                                <i class="fas fa-search fa-fw"></i>
-                            </button>
-                        </div>
-                    </div>
+                <div class="input-group" data-widget="sidebar-search">
+                <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
+                <div class="input-group-append">
+                <button class="btn btn-sidebar">
+                <i class="fas fa-search fa-fw"></i>
+                </button>
+                </div>
+                </div>
                 </div> *@
 
                 <!-- Sidebar Menu -->
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                   
+
                         <li class="nav-item menu-open">
                             <a class="nav-link active" style="background:#20c997">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -202,6 +202,14 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a asp-controller="MedicalOrders" asp-action="UserOrder" class="nav-link">
+                                <i class="nav-icon fas fa-list-alt"></i>
+                                <p>
+                                    UserOrders
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a asp-controller="MedicalShopProductStocks" asp-action="Index" class="nav-link">
                                 <i class="nav-icon fas fa-cubes"></i>
                                 <p>
@@ -218,18 +226,18 @@
 
         <!-- Content Wrapper. Contains page content -->
         @* <div class="content-wrapper">
-            <!-- Main content -->
-            <section class="content">
-             </section>
-          </div> *@
+        <!-- Main content -->
+        <section class="content">
+        </section>
+        </div> *@
         <!-- /.content-wrapper -->
 
 
         <footer class="main-footer" style="bottom: 0;left: 0;position: fixed;right: 0;z-index: 1032">
             <strong>Copyright &copy; 2023 <a href="https://adminlte.io" style="color:#20c997">Global Pharama Agency</a>.</strong>
             All rights reserved.
-           @*  <div class="float-right d-none d-sm-inline-block">
-                <b>Version</b> 3.2.0
+            @*  <div class="float-right d-none d-sm-inline-block">
+            <b>Version</b> 3.2.0
             </div> *@
         </footer>
 
@@ -241,8 +249,8 @@
     <script src="~/plugins/jquery-ui/jquery-ui.min.js"></script>
     <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
     <scri@* pt>
-        $.widget.bridge('uibutton', $.ui.button)
-    </script> *@
+            $.widget.bridge('uibutton', $.ui.button)
+            </script> *@
     <!-- Bootstrap 4 -->
     <script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
     <!-- ChartJS -->
@@ -270,7 +278,7 @@
     <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
     <script src="~/dist/js/pages/dashboard.js"></script>
     <div>
-        @RenderBody()
+            @RenderBody()
     </div>
 </body>
 </html>
