@@ -4,7 +4,12 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+@{
+    Layout = "_UserLayout";
+}
+
+<div class="container">
+
 
 @if (TempData["CartAdded"] != null)
 {
@@ -46,4 +51,6 @@
             </div>
         </div>
     }
+</div>
+
 </div>
