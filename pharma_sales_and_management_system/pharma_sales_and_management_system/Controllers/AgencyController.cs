@@ -46,14 +46,14 @@ namespace pharma_sales_and_management_system.Controllers
 
                 if (agencyDetail != null)
                 {
-                    if (search != null)
-                    {
-                        var searchResults = new List<AgencyDetail>
-                        {
-                            agencyDetail
-                        }.Where(a => a.AgencyName.Contains(search) || a.Email.Contains(search) || a.ContactNo.ToString().Contains(search));
-                        return View(searchResults.ToList());
-                    }
+                    //if (search != null)
+                    //{
+                    //    var searchResults = new List<AgencyDetail>
+                    //    {
+                    //        agencyDetail
+                    //    }.Where(a => a.AgencyName.Contains(search) || a.Email.Contains(search) || a.ContactNo.ToString().Contains(search));
+                    //    return View(searchResults.ToList());
+                    //}
                     return View(new List<AgencyDetail> { agencyDetail });
                 }
 

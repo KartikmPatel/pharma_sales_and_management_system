@@ -8,95 +8,54 @@
     Layout = "_AgencyLayout";
 }
 
-
-@* <aside style="float:left;width:10%;height:600px;background-color:silver;">
-    <ul class="navbar-nav flex-grow-1">
-        <li id="n1" class="nav-item">
-            <a class="nav-link text-dark" asp-area="">Dashboard</a>
-        </li>
-        <li id="n1" class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="ProductCategories" asp-action="Index">Categories</a>
-        </li>
-        <li id="n1" class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="ProductDetails" asp-action="Index">Products</a>
-        </li>
-        <li id="n1" class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="AgencyOrders" asp-action="Index">Order</a>
-        </li>
-        <li id="n1" class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="Medical" asp-action="Index">Stores</a>
-        </li>
-        <li id="n1" class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="ProductDetails" asp-action="Index">Users</a>
-        </li>
-        <li id="n1" class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="AgencyProductStocks" asp-action="Index">Stocks</a>
-        </li>
-        <li id="n1" class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="ProductDetails" asp-action="Index">Report</a>
-        </li>
-    </ul>
-</aside> *@
-
+<div class="container">
 <h1 style="margin-left:10%;">Agency Details</h1>
 
-<a asp-action="Logout">Logout</a>
+<a asp-action="Logout" class="btn btn-info">Logout</a>
 
-<form asp-action="Index" method="get" style="margin-left:10%;">
-    <input type="text" name="search" />
-    <input type="submit" value="Search" />
-</form>
-
-<p>
-    @* <a asp-action="Create" style="padding-left:2%;">Create New</a> *@
-</p>
-
-<table class="table" style="position:absolute;width:1000px;margin-left:150px;">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.AgencyName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ContactNo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Password)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ProfileImage)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.AgencyName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ContactNo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Password)
-            </td>
-            <td>
-                <img src="@Html.DisplayFor(modelItem => item.ProfileImage)" height="50px" width="50px">
-                @* @Html.DisplayFor(modelItem => item.ProfileImage) *@
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="card">
+    <!-- /.card-header -->
+    <div class="card-body">
+        <table id="example1" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Agency Name</th>
+                    <th>Email</th>
+                    <th>Contact No</th>
+                    <th>Password</th>
+                    <th>Profile Image</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.AgencyName)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                        <td>@Html.DisplayFor(modelItem => item.ContactNo)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Password)</td>
+                        <td><img src="@Html.DisplayFor(modelItem => item.ProfileImage)" height="50px" width="50px"></td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                            <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <!-- /.card-body -->
+</div>
+</div>
+<script>
+    $(document).ready(function () {
+        $("#example1").DataTable({
+            "responsive": true,
+            "lengthChange": false,
+            "autoWidth": false,
+            "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+        });
+    });
+</script>
