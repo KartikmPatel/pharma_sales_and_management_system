@@ -8,68 +8,82 @@
     Layout = "_AgencyLayout";
 }
 
-<h1>Agency Order</h1>
-<p>
-    <a asp-action="Create">Add New</a>
-</p>
-<table class="table" style="position:absolute;width:80%;">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Quantity)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Date)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsDelivered)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Agency.AgencyName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Company.ComponyName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Product.ProductName)
-            </th>
-            @*<th></th>*@
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Quantity)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Date)
-            </td>
-            <td>
-                @if(item.IsDelivered == 1)
-                {
-                   <p style="color:green;font-weight:bold">Delivered</p>
-                }
-                else
-                {
-                   <p style="color:red;font-weight:bold">Pending</p>
-                }
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Agency.AgencyName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Company.ComponyName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Product.ProductName)
-            </td>
-            <td>
-                @* <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> | *@
-                @*<a asp-action="Details" asp-route-id="@item.Id">Details</a> |*@
-                @* <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> *@
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="container">
+    <h1 style="margin-left:10%;">Agency Order</h1>
+    <p>
+        <a asp-action="Create" class="btn btn-info">Create New</a>
+    </p>
+
+    <div class="card">
+        <!-- /.card-header -->
+        <div class="card-body">
+            <table id="example1" class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Quantity)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Date)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.IsDelivered)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Agency.AgencyName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Company.ComponyName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Product.ProductName)
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Quantity)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Date)
+                            </td>
+                            <td>
+                                @if (item.IsDelivered == 1)
+                                {
+                                    <p style="color:green;font-weight:bold">Delivered</p>
+                                }
+                                else
+                                {
+                                    <p style="color:red;font-weight:bold">Pending</p>
+                                }
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Agency.AgencyName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Company.ComponyName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Product.ProductName)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <!-- /.card-body -->
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $("#example1").DataTable({
+            "responsive": true,
+            "lengthChange": false,
+            "autoWidth": false,
+            "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+        });
+    });
+</script>

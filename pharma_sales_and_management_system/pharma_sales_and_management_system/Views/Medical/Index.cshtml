@@ -8,84 +8,97 @@
     Layout = "_AgencyLayout";
 }
 
-<h1>Medical shop Requests</h1>
+<div class="container">
+    <h1 style="margin-left:10%;">Medical shop Request</h1>
 
-<form asp-action="Index" method="get">
-    <input type="text" name="search" />
-    <input type="submit" value="Search" />
-</form>
-
-
-<table class="table" style="position:relative;margin-left:20%;width:80%;">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.OwnerName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ContactNo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.City)
-            </th>
-           @* <th>
-                @Html.DisplayNameFor(model => model.Password)
-            </th>*@
-            <th>
-                @Html.DisplayNameFor(model => model.ProfilePic)
-            </th>
-            <th>
-                <center>
-                    Action
-                </center>
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.OwnerName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ContactNo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.City)
-            </td>
-           @* <td>
-                @Html.DisplayFor(modelItem => item.Password)
-            </td>*@
-            <td>
-                <img src="@Html.DisplayFor(modelItem => item.ProfilePic)" height="50px" width="50px">
-                @* @Html.DisplayFor(modelItem => item.ProfilePic) *@
-            </td>
-            @* <td>
-                @Html.DisplayFor(modelItem => item.IsConfirmed)
-            </td> *@
-            <td>
-                <center>
-
-                    @if (item.IsConfirmed == 1)
+    <div class="card">
+        <!-- /.card-header -->
+        <div class="card-body">
+            <table id="example1" class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.OwnerName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Email)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.ContactNo)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.City)
+                        </th>
+                        @* <th>
+                        @Html.DisplayNameFor(model => model.Password)
+                        </th>*@
+                        <th>
+                            @Html.DisplayNameFor(model => model.ProfilePic)
+                        </th>
+                        <th>
+                            <center>
+                                Action
+                            </center>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
                     {
-                        <button class="btn btn-secondary" disabled>Verified</button>
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.OwnerName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Email)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ContactNo)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.City)
+                            </td>
+                            @* <td>
+                        @Html.DisplayFor(modelItem => item.Password)
+                        </td>*@
+                            <td>
+                                <img src="@Html.DisplayFor(modelItem => item.ProfilePic)" height="50px" width="50px">
+                                @* @Html.DisplayFor(modelItem => item.ProfilePic) *@
+                            </td>
+                            @* <td>
+                        @Html.DisplayFor(modelItem => item.IsConfirmed)
+                        </td> *@
+                            <td>
+                                <center>
+
+                                    @if (item.IsConfirmed == 1)
+                                    {
+                                        <button class="btn btn-secondary" disabled>Verified</button>
+                                    }
+                                    else
+                                    {
+                                        <form asp-action="Verify" method="post">
+                                            <input type="hidden" name="verify" class="form-control" value="0" />
+                                            <button type="submit" class="btn btn-primary" asp-route-id="@item.Id">Verify</button>
+                                        </form>
+                                    }
+                                </center>
+                            </td>
+                        </tr>
                     }
-                    else
-                    {
-                    <form asp-action="Verify" method="post">
-                      <input type="hidden" name="verify" class="form-control" value="0" />
-                      <button type="submit" class="btn btn-primary" asp-route-id="@item.Id">Verify</button>
-                    </form>
-                    }
-                    </center>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+                </tbody>
+            </table>
+        </div>
+        <!-- /.card-body -->
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $("#example1").DataTable({
+            "responsive": true,
+            "lengthChange": false,
+            "autoWidth": false,
+            "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+        });
+    });
+</script>

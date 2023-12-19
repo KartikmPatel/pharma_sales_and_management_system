@@ -10,7 +10,6 @@
 
 <div class="container">
 
-<h1>Available Medicine</h1>
 @if (TempData["success"] != null)
 {
     <div class="alert alert-success">
@@ -18,68 +17,87 @@
     </div>
 }
 
-<table class="table" style="position:absolute;width:80%;">
-    <thead>
-        <tr>
-            <th>
-               @* @Html.DisplayNameFor(model => model.ProductImage)*@
-               Image
-            </th>
-            <th>
-                @*@Html.DisplayNameFor(model => model.ProductName)*@
-                Name
-            </th>
-            <th>
-                @*@Html.DisplayNameFor(model => model.RetailPrice)*@
-                Price
-            </th>
-            <th>
-                @*@Html.DisplayNameFor(model => model.Disease)*@
-                Disease
-            </th>
-            <th>
-                @*@Html.DisplayNameFor(model => model.ExpDate)*@
-                Expire Date
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                <img src="@Html.DisplayFor(modelItem => item.ProductImage)" height="50px" width="50px">
-                @* @Html.DisplayFor(modelItem => item.ProductImage) *@
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RetailPrice)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Disease)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ExpDate)
-            </td>
-            <td>
-                    @if (ViewBag.Confirmed == 1)
+    <h1 style="margin-left:10%;">Available Medicine</h1>
+
+    <div class="card">
+        <!-- /.card-header -->
+        <div class="card-body">
+            <table id="example1" class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>
+                            @* @Html.DisplayNameFor(model => model.ProductImage)*@
+                            Image
+                        </th>
+                        <th>
+                            @*@Html.DisplayNameFor(model => model.ProductName)*@
+                            Name
+                        </th>
+                        <th>
+                            @*@Html.DisplayNameFor(model => model.RetailPrice)*@
+                            Price
+                        </th>
+                        <th>
+                            @*@Html.DisplayNameFor(model => model.Disease)*@
+                            Disease
+                        </th>
+                        <th>
+                            @*@Html.DisplayNameFor(model => model.ExpDate)*@
+                            Expire Date
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
                     {
-                        @*<button class="btn btn-success" asp-controller="MedicalMedicine" asp-action="PurchaseMedicine"> Purchase </button>*@
-                        <form asp-action="PurchaseMedicine" asp-controller="MedicalMedicine" method="post">
-                            <input type="hidden" name="productName" value=@item.ProductName>
-                            <input type="hidden" name="companyId" value=@item.CompanyId>
-                        <button type="submit" class="btn btn-success">Purchase</button>
-                        </form>
+                        <tr>
+                            <td>
+                                <img src="@Html.DisplayFor(modelItem => item.ProductImage)" height="50px" width="50px">
+                                @* @Html.DisplayFor(modelItem => item.ProductImage) *@
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ProductName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.RetailPrice)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Disease)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ExpDate)
+                            </td>
+                            <td>
+                                @if (ViewBag.Confirmed == 1)
+                                {
+                                    @*<button class="btn btn-success" asp-controller="MedicalMedicine" asp-action="PurchaseMedicine"> Purchase </button>*@
+                                    <form asp-action="PurchaseMedicine" asp-controller="MedicalMedicine" method="post">
+                                        <input type="hidden" name="productName" value=@item.ProductName>
+                                        <input type="hidden" name="companyId" value=@item.CompanyId>
+                                        <button type="submit" class="btn btn-success">Purchase</button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-secondary" disabled> Not Verified </button>
+                                }
+                            </td>
+                        </tr>
                     }
-                    else
-                    {
-                        <button class="btn btn-secondary" disabled> Not Verified </button>
-                    }
-                </td>
-        </tr>
-}
-    </tbody>
-</table>
+                </tbody>
+            </table>
+        </div>
+        <!-- /.card-body -->
+    </div>
 </div>
+<script>
+    $(document).ready(function () {
+        $("#example1").DataTable({
+            "responsive": true,
+            "lengthChange": false,
+            "autoWidth": false,
+            "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+        });
+    });
+</script>

@@ -4,13 +4,16 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+@{
+    Layout = "_AgencyLayout";
+}
 
+<div class="container">
 <h4>AgencyOrder</h4>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
+<div class="card card-primary">
+    <form asp-action="Create">
+        <div class="card-body">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="ProductId" class="control-label">Product Name</label>
@@ -35,20 +38,19 @@
                 <select asp-for="CompanyId" class="form-control" asp-items="ViewBag.CompanyId"></select>
             </div>
             <div class="form-group">
-                <label asp-for="IsDelivered" class="control-label"></label>
-                <input asp-for="IsDelivered" class="form-control" value="0" type="hidden" readonly />
+                <input asp-for="IsDelivered" class="form-control" value="0" type="hidden" />
                 <span asp-validation-for="IsDelivered" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+        </div>
+        <!-- /.card-body -->
+
+        <div class="card-footer">
+            <input type="submit" value="Purchase" class="btn btn-primary" />
+        </div>
+    </form>
+</div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

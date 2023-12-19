@@ -8,8 +8,6 @@
     Layout = "_AgencyLayout";
 }
 
-<h1>Index</h1>
-
 @if (TempData["error"] != null)
 {
     <div class="alert alert-danger">
@@ -17,70 +15,91 @@
     </div>
 }
 
-<table class="table" style="position:absolute;width:80%;">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.MedicalShop.OwnerName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Product.ProductName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Company.ComponyName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TotalQuantity)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BillAmount)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.OrderDate)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.MedicalShop.OwnerName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Product.ProductName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Company.ComponyName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TotalQuantity)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BillAmount)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.OrderDate)
-            </td>
-        
-            <td>
-               @if(item.IsPlaced == 0)
-               {
-                        <form asp-action="AcceptOrder" asp-controller="AgencyMedicalOrders" method="post">
-                            <input type="hidden" name="verify" class="form-control" value="1" />
-                            <input type="hidden" name="pid" class="form-control" value="@item.ProductId"/>
-                            <input type="hidden" name="oid" class="form-control" value="@item.Id"/>
-                            <input type="hidden" name="mid" class="form-control" value="@item.MedicalShopId"/>
-                            <input type="hidden" name="quantity" class="form-control" value="@item.TotalQuantity"/>
-                            <button type="submit" class="btn btn-primary">Accept</button>
-                        </form>
-               }
-               else
-               {
-                       <button class="btn btn-secondary">Confirmed</button>
-               }
-                </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="container">
+    <h1 style="margin-left:10%;">Medical Order</h1>
+
+    <div class="card">
+        <!-- /.card-header -->
+        <div class="card-body">
+            <table id="example1" class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.MedicalShop.OwnerName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Product.ProductName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Company.ComponyName)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.TotalQuantity)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.BillAmount)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.OrderDate)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.MedicalShop.OwnerName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Product.ProductName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Company.ComponyName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TotalQuantity)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.BillAmount)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.OrderDate)
+                            </td>
+
+                            <td>
+                                @if (item.IsPlaced == 0)
+                                {
+                                    <form asp-action="AcceptOrder" asp-controller="AgencyMedicalOrders" method="post">
+                                        <input type="hidden" name="verify" class="form-control" value="1" />
+                                        <input type="hidden" name="pid" class="form-control" value="@item.ProductId" />
+                                        <input type="hidden" name="oid" class="form-control" value="@item.Id" />
+                                        <input type="hidden" name="mid" class="form-control" value="@item.MedicalShopId" />
+                                        <input type="hidden" name="quantity" class="form-control" value="@item.TotalQuantity" />
+                                        <button type="submit" class="btn btn-primary">Accept</button>
+                                    </form>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-secondary">Confirmed</button>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <!-- /.card-body -->
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $("#example1").DataTable({
+            "responsive": true,
+            "lengthChange": false,
+            "autoWidth": false,
+            "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+        });
+    });
+</script>

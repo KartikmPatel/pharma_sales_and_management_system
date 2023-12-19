@@ -109,7 +109,7 @@
 
         <!-- Preloader -->
         <div class="preloader flex-column justify-content-center align-items-center">
-            <img class="animation__shake" src="dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60">
+            <img class="animation__shake" src="~/dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60">
         </div>
 
         <!-- Navbar -->
@@ -253,8 +253,8 @@
         <!-- /.content-wrapper -->
 
 
-        <footer class="main-footer" style="bottom: 0;left: 0;position: fixed;right: 0;z-index: 1032">
-            <strong>Copyright &copy; 2023 <a href="https://adminlte.io" style="color:#17a2b8">Global Pharama Agency</a>.</strong>
+        <footer class="main-footer" style="bottom: 0;left: 0;position: fixed;right: 0;z-index:9999">
+            <strong>Copyright &copy; 2023 <a style="color:#17a2b8">Global Pharama Agency</a>.</strong>
             All rights reserved.
             @*  <div class="float-right d-none d-sm-inline-block">
             <b>Version</b> 3.2.0
@@ -297,7 +297,7 @@
     <script src="~/dist/js/demo.js"></script>
     <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
     <script src="~/dist/js/pages/dashboard.js"></script>
-    <!-- Datatable --></>
+    <!-- Datatable -->
     <script src="~/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
     <script src="~/plugins/datatables-buttons/js/buttons.print.min.js"></script>
     <script src="~/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
@@ -310,5 +310,6 @@
     <div>
             @RenderBody()
     </div>
+        @RenderSection("Scripts", required: false)
 </body>
 </html>

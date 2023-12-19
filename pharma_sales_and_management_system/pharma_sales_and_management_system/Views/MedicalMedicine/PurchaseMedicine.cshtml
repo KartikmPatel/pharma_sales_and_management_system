@@ -4,15 +4,18 @@
     ViewData["Title"] = "PurchaseMedicine";
 }
 
+@{
+    Layout = "_MedicalLayout";
+}
+
 <div class="container">
 
 <h1>PurchaseMedicine</h1>
 
-<h4>MedicalOrder</h4>
 <hr />
-<div class="row">
-    <div class="col-md-4">
+<div class="card card-primary">
         <form asp-action="purchaseProduct" asp-controller="MedicalMedicine">
+        <div class="card-body">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                @* <label asp-for="MedicalShopId" class="control-label"></label>
@@ -41,15 +44,14 @@
                 <input asp-for="BillAmount" class="form-control" id="billAmount" readonly/>
                 <span asp-validation-for="BillAmount" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+        </div>
+            <!-- /.card-body -->
+
+            <div class="card-footer">
+                <input type="submit" value="Purchase" class="btn btn-primary" />
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
@@ -72,4 +74,3 @@
         })
     </script>
 }
-</div>

@@ -4,9 +4,11 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
+@{
+    Layout = "_AgencyLayout";
+}
 
-<div>
+<div class="container">
     <h4>ProductCategory</h4>
     <hr />
     <dl class="row">
@@ -17,8 +19,8 @@
             @Html.DisplayFor(model => model.CategoryName)
         </dd>
     </dl>
-</div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
+</div>
 </div>
