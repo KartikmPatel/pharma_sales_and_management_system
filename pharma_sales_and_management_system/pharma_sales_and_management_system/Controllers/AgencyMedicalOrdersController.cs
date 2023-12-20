@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Protocol.Plugins;
 using pharma_sales_and_management_system.Models;
 
 namespace pharma_sales_and_management_system.Controllers
@@ -18,9 +19,21 @@ namespace pharma_sales_and_management_system.Controllers
             _context = context;
         }
 
+        private bool IsUserAuthenticated()
+        {
+            return HttpContext.Session.GetInt32("AgencyId").HasValue;
+        }
+
         // GET: AgencyMedicalOrders
         public async Task<IActionResult> Index()
         {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction("Login","Agency");
+            }
+            var agencyDetails = await (from i in _context.AgencyDetails
+                                       select i).FirstOrDefaultAsync();
+            ViewBag.ProfilePhoto = agencyDetails.ProfileImage;
             var pharma_managementContext = _context.MedicalOrders.Include(m => m.Company).Include(m => m.MedicalShop).Include(m => m.Product);
             return View(await pharma_managementContext.ToListAsync());
         }
@@ -72,6 +85,10 @@ namespace pharma_sales_and_management_system.Controllers
         // GET: AgencyMedicalOrders/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction("Login", "Agency");
+            }
             if (id == null || _context.MedicalOrders == null)
             {
                 return NotFound();
@@ -93,6 +110,10 @@ namespace pharma_sales_and_management_system.Controllers
         // GET: AgencyMedicalOrders/Create
         public IActionResult Create()
         {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction("Login", "Agency");
+            }
             ViewData["CompanyId"] = new SelectList(_context.Manufacturers, "Id", "Id");
             ViewData["MedicalShopId"] = new SelectList(_context.MedicalShopDetails, "Id", "Id");
             ViewData["ProductId"] = new SelectList(_context.ProductDetails, "Id", "Id");
@@ -121,6 +142,10 @@ namespace pharma_sales_and_management_system.Controllers
         // GET: AgencyMedicalOrders/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction("Login", "Agency");
+            }
             if (id == null || _context.MedicalOrders == null)
             {
                 return NotFound();
@@ -178,6 +203,10 @@ namespace pharma_sales_and_management_system.Controllers
         // GET: AgencyMedicalOrders/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction("Login", "Agency");
+            }
             if (id == null || _context.MedicalOrders == null)
             {
                 return NotFound();

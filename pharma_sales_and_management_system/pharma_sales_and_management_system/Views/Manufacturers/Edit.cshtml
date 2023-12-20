@@ -4,13 +4,16 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+@{
+    Layout = "_companyLayout";
+}
 
-<h4>Manufacturer</h4>
+<div class="container">
+<h4>Company Profile</h4>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
+<div class="card card-primary">
+    <form asp-action="Edit">
+        <div class="card-body">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
@@ -38,11 +41,14 @@
                 <input asp-for="City" class="form-control" />
                 <span asp-validation-for="City" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+        </div>
+        <!-- /.card-body -->
+
+        <div class="card-footer">
+            <input type="submit" value="Edit Profile" class="btn btn-primary" />
+        </div>
+    </form>
+</div>
 </div>
 
 <div>

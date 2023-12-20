@@ -40,7 +40,7 @@ namespace pharma_sales_and_management_system.Controllers
                 }
 
                 var manufacturerDetail = await _context.Manufacturers.FirstOrDefaultAsync(m => m.Id == manufacturerId.Value);
-
+                ViewBag.editId = manufacturerDetail.Id;
                 if (manufacturerDetail != null)
                 {
                     if (search != null)

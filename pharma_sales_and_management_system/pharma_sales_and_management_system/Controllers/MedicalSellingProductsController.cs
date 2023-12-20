@@ -35,6 +35,10 @@ namespace pharma_sales_and_management_system.Controllers
             {
                 var medicalShopId = HttpContext.Session.GetInt32("MedicalShopId");
 
+                var medicalDetails = await (from i in _context.MedicalShopDetails
+                                            where i.Id == medicalShopId
+                                            select i).FirstOrDefaultAsync();
+                ViewBag.ProfilePhoto = medicalDetails.ProfilePic;
                 var pharma_managementContext = _context.MedicalSellingProducts.Where(m => m.MedicalShopId == medicalShopId).Include(m => m.MedicalShop).Include(m => m.Product);
                 return View(await pharma_managementContext.ToListAsync());
             }
@@ -43,6 +47,10 @@ namespace pharma_sales_and_management_system.Controllers
         // GET: MedicalSellingProducts/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction("Login", "MedicalShopRegister");
+            }
             if (id == null || _context.MedicalSellingProducts == null)
             {
                 return NotFound();
@@ -70,6 +78,10 @@ namespace pharma_sales_and_management_system.Controllers
             else
             {
                 var medicalShopId = HttpContext.Session.GetInt32("MedicalShopId");
+                var medicalDetails = (from i in _context.MedicalShopDetails
+                                           where i.Id == medicalShopId
+                                           select i).FirstOrDefault();
+                ViewBag.ProfilePhoto = medicalDetails.ProfilePic;
 
                 var prodIDs = (from p in _context.MedicalShopProductStocks
                                where p.MedicalShopId == medicalShopId
@@ -145,6 +157,10 @@ namespace pharma_sales_and_management_system.Controllers
         // GET: MedicalSellingProducts/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction("Login", "MedicalShopRegister");
+            }
             if (id == null || _context.MedicalSellingProducts == null)
             {
                 return NotFound();
@@ -200,11 +216,20 @@ namespace pharma_sales_and_management_system.Controllers
         // GET: MedicalSellingProducts/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction("Login", "MedicalShopRegister");
+            }
             if (id == null || _context.MedicalSellingProducts == null)
             {
                 return NotFound();
             }
 
+            var medicalShopId = HttpContext.Session.GetInt32("MedicalShopId");
+            var medicalDetails = (from i in _context.MedicalShopDetails
+                                  where i.Id == medicalShopId
+                                  select i).FirstOrDefault();
+            ViewBag.ProfilePhoto = medicalDetails.ProfilePic;
             var medicalSellingProduct = await _context.MedicalSellingProducts
                 .Include(m => m.MedicalShop)
                 .Include(m => m.Product)

@@ -4,13 +4,16 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+@{
+    Layout = "_AgencyLayout";
+}
 
-<h4>AgencyDetail</h4>
+<div class="container">
+<h4>Agency Profile</h4>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit" enctype="multipart/form-data">
+<div class="card card-primary">
+    <form asp-action="Edit" enctype="multipart/form-data">
+        <div class="card-body">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
@@ -41,16 +44,14 @@
                 <input type="hidden" name="oldfile" class="form-control" id="OldProfileImage" value="@Model.ProfileImage">
                 <span class="text-danger field-validation-valid" data-valmsg-for="ProfileImage" data-valmsg-replace="true"></span>
             </div>
+        </div>
+        <!-- /.card-body -->
 
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+        <div class="card-footer">
+            <input type="submit" value="Edit Profile" class="btn btn-primary" />
+        </div>
+    </form>
 </div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

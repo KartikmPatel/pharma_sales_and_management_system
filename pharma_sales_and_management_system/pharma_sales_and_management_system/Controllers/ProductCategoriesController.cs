@@ -18,9 +18,18 @@ namespace pharma_sales_and_management_system.Controllers
             _context = context;
         }
 
+        private bool IsUserAuthenticated()
+        {
+            return HttpContext.Session.GetInt32("AgencyId").HasValue;
+        }
+
         // GET: ProductCategories
         public async Task<IActionResult> Index(string search)
         {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction("Login", "Agency");
+            }
             if (search != null)
             {
                 var searchCategory = from c in _context.ProductCategories
@@ -28,6 +37,11 @@ namespace pharma_sales_and_management_system.Controllers
                                     select c;
                 return View(await searchCategory.ToListAsync());
             }
+
+            var agencyDetails = await (from i in _context.AgencyDetails
+                                        select i).FirstOrDefaultAsync();
+            ViewBag.ProfilePhoto = agencyDetails.ProfileImage;
+
             return _context.ProductCategories != null ? 
                           View(await _context.ProductCategories.ToListAsync()) :
                           Problem("Entity set 'pharma_managementContext.ProductCategories'  is null.");
@@ -36,6 +50,10 @@ namespace pharma_sales_and_management_system.Controllers
         // GET: ProductCategories/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction("Login", "Agency");
+            }
             if (id == null || _context.ProductCategories == null)
             {
                 return NotFound();
@@ -43,6 +61,9 @@ namespace pharma_sales_and_management_system.Controllers
 
             var productCategory = await _context.ProductCategories
                 .FirstOrDefaultAsync(m => m.Id == id);
+            var agencyDetails = await (from i in _context.AgencyDetails
+                                       select i).FirstOrDefaultAsync();
+            ViewBag.ProfilePhoto = agencyDetails.ProfileImage;
             if (productCategory == null)
             {
                 return NotFound();
@@ -54,6 +75,13 @@ namespace pharma_sales_and_management_system.Controllers
         // GET: ProductCategories/Create
         public IActionResult Create()
         {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction("Login", "Agency");
+            }
+            var agencyDetails = (from i in _context.AgencyDetails
+                                      select i).FirstOrDefault();
+            ViewBag.ProfilePhoto = agencyDetails.ProfileImage;
             return View();
         }
 
@@ -76,12 +104,19 @@ namespace pharma_sales_and_management_system.Controllers
         // GET: ProductCategories/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction("Login", "Agency");
+            }
             if (id == null || _context.ProductCategories == null)
             {
                 return NotFound();
             }
 
             var productCategory = await _context.ProductCategories.FindAsync(id);
+            var agencyDetails = await (from i in _context.AgencyDetails
+                                       select i).FirstOrDefaultAsync();
+            ViewBag.ProfilePhoto = agencyDetails.ProfileImage;
             if (productCategory == null)
             {
                 return NotFound();
@@ -127,6 +162,10 @@ namespace pharma_sales_and_management_system.Controllers
         // GET: ProductCategories/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction("Login", "Agency");
+            }
             if (id == null || _context.ProductCategories == null)
             {
                 return NotFound();
@@ -134,6 +173,9 @@ namespace pharma_sales_and_management_system.Controllers
 
             var productCategory = await _context.ProductCategories
                 .FirstOrDefaultAsync(m => m.Id == id);
+            var agencyDetails = await (from i in _context.AgencyDetails
+                                       select i).FirstOrDefaultAsync();
+            ViewBag.ProfilePhoto = agencyDetails.ProfileImage;
             if (productCategory == null)
             {
                 return NotFound();

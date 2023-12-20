@@ -33,6 +33,10 @@ namespace pharma_sales_and_management_system.Controllers
             else
             {
                 var medicalShopId = HttpContext.Session.GetInt32("MedicalShopId");
+                var medicalDetails = await (from i in _context.MedicalShopDetails
+                                            where i.Id == medicalShopId
+                                            select i).FirstOrDefaultAsync();
+                ViewBag.ProfilePhoto = medicalDetails.ProfilePic;
                 var pharma_managementContext = _context.MedicalShopProductStocks.Where(m => m.MedicalShopId == medicalShopId).Include(m => m.MedicalShop).Include(m => m.Product);
                 return View(await pharma_managementContext.ToListAsync());
             }
@@ -41,6 +45,10 @@ namespace pharma_sales_and_management_system.Controllers
         // GET: MedicalShopProductStocks/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction("Login", "MedicalShopRegister");
+            }
             if (id == null || _context.MedicalShopProductStocks == null)
             {
                 return NotFound();
@@ -61,6 +69,10 @@ namespace pharma_sales_and_management_system.Controllers
         // GET: MedicalShopProductStocks/Create
         public IActionResult Create()
         {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction("Login", "MedicalShopRegister");
+            }
             ViewBag.MedicalShopId = new SelectList(_context.MedicalShopDetails, "Id", "OwnerName");
             ViewBag.ProductId = new SelectList(_context.ProductDetails, "Id", "ProductName");
             return View();
@@ -81,6 +93,10 @@ namespace pharma_sales_and_management_system.Controllers
         // GET: MedicalShopProductStocks/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction("Login", "MedicalShopRegister");
+            }
             if (id == null || _context.MedicalShopProductStocks == null)
             {
                 return NotFound();
@@ -130,6 +146,10 @@ namespace pharma_sales_and_management_system.Controllers
         // GET: MedicalShopProductStocks/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction("Login", "MedicalShopRegister");
+            }
             if (id == null || _context.MedicalShopProductStocks == null)
             {
                 return NotFound();

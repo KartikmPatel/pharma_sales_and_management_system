@@ -33,6 +33,10 @@ namespace pharma_sales_and_management_system.Controllers
             else
             {
                 var medicalShopId = HttpContext.Session.GetInt32("MedicalShopId");
+                var medicalDetails = await (from i in _context.MedicalShopDetails
+                                            where i.Id == medicalShopId
+                                            select i).FirstOrDefaultAsync();
+                ViewBag.ProfilePhoto = medicalDetails.ProfilePic;
                 var pharma_managementContext = await (from o in _context.MedicalOrders
                                                       where o.MedicalShopId == medicalShopId
                                                       select o).Include(m => m.Company).Include(m => m.MedicalShop).Include(m => m.Product).ToListAsync();
@@ -43,6 +47,10 @@ namespace pharma_sales_and_management_system.Controllers
         // GET: MedicalOrders/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction("Login", "MedicalShopRegister");
+            }
             if (id == null || _context.MedicalOrders == null)
             {
                 return NotFound();
@@ -64,6 +72,10 @@ namespace pharma_sales_and_management_system.Controllers
         // GET: MedicalOrders/Create
         public IActionResult Create()
         {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction("Login", "MedicalShopRegister");
+            }
             ViewData["CompanyId"] = new SelectList(_context.Manufacturers, "Id", "Id");
             ViewData["MedicalShopId"] = new SelectList(_context.MedicalShopDetails, "Id", "Id");
             ViewData["ProductId"] = new SelectList(_context.ProductDetails, "Id", "Id");
@@ -92,6 +104,10 @@ namespace pharma_sales_and_management_system.Controllers
         // GET: MedicalOrders/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction("Login", "MedicalShopRegister");
+            }
             if (id == null || _context.MedicalOrders == null)
             {
                 return NotFound();
@@ -149,10 +165,20 @@ namespace pharma_sales_and_management_system.Controllers
         // GET: MedicalOrders/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction("Login", "MedicalShopRegister");
+            }
             if (id == null || _context.MedicalOrders == null)
             {
                 return NotFound();
             }
+
+            var medicalShopId = HttpContext.Session.GetInt32("MedicalShopId");
+            var medicalDetails = (from i in _context.MedicalShopDetails
+                                  where i.Id == medicalShopId
+                                  select i).FirstOrDefault();
+            ViewBag.ProfilePhoto = medicalDetails.ProfilePic;
 
             var medicalOrder = await _context.MedicalOrders
                 .Include(m => m.Company)
@@ -195,6 +221,10 @@ namespace pharma_sales_and_management_system.Controllers
             else
             {
                 var medicalShopId = HttpContext.Session.GetInt32("MedicalShopId");
+                var medicalDetails = (from i in _context.MedicalShopDetails
+                                           where i.Id == medicalShopId
+                                           select i).FirstOrDefault();
+                ViewBag.ProfilePhoto = medicalDetails.ProfilePic;
                 var data = from o in _context.UserOrders
                            where o.MedicalShopId == medicalShopId
                            select new UserOrderView

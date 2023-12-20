@@ -45,6 +45,7 @@ namespace pharma_sales_and_management_system.Controllers
 
                 if (medicalShopDetail != null)
                 {
+                    ViewBag.ProfilePhoto = medicalShopDetail.ProfilePic;
                     if (search != null)
                     {
                         var searchResults = new List<MedicalShopDetail>
@@ -86,6 +87,10 @@ namespace pharma_sales_and_management_system.Controllers
         // GET: MedicalShopRegister/Create
         public IActionResult Create()
         {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction(nameof(Login));
+            }
             return View();
         }
 

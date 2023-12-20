@@ -18,9 +18,21 @@ namespace pharma_sales_and_management_system.Controllers
             _context = context;
         }
 
+        private bool IsUserAuthenticated()
+        {
+            return HttpContext.Session.GetInt32("AgencyId").HasValue;
+        }
+
         // GET: AgencyProductStocks
         public async Task<IActionResult> Index()
         {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction("Login", "Agency");
+            }
+            var agencyDetails = await (from i in _context.AgencyDetails
+                                       select i).FirstOrDefaultAsync();
+            ViewBag.ProfilePhoto = agencyDetails.ProfileImage;
             var pharma_managementContext = _context.AgencyProductStocks.Include(p => p.Product);
             return View(await pharma_managementContext.ToListAsync());                
         }
@@ -28,6 +40,10 @@ namespace pharma_sales_and_management_system.Controllers
         // GET: AgencyProductStocks/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction("Login", "Agency");
+            }
             if (id == null || _context.AgencyProductStocks == null)
             {
                 return NotFound();
@@ -46,6 +62,10 @@ namespace pharma_sales_and_management_system.Controllers
         // GET: AgencyProductStocks/Create
         public IActionResult Create()
         {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction("Login", "Agency");
+            }
             ViewBag.ProductId = new SelectList(_context.ProductDetails, "Id", "ProductName");
             return View();
         }
@@ -65,6 +85,10 @@ namespace pharma_sales_and_management_system.Controllers
         // GET: AgencyProductStocks/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction("Login", "Agency");
+            }
             if (id == null || _context.AgencyProductStocks == null)
             {
                 return NotFound();
@@ -116,6 +140,10 @@ namespace pharma_sales_and_management_system.Controllers
         // GET: AgencyProductStocks/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction("Login", "Agency");
+            }
             if (id == null || _context.AgencyProductStocks == null)
             {
                 return NotFound();

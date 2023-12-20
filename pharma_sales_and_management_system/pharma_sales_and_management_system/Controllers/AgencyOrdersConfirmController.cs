@@ -43,7 +43,8 @@ namespace pharma_sales_and_management_system.Controllers
                 var mid = await (from m in _context.Manufacturers
                                                where m.Id == manufacturerId.Value
                                                select m.Id).FirstOrDefaultAsync();
-                if(mid != 0)
+                ViewBag.editId = mid;
+                if (mid != 0)
                 {
                     var pharma_managementContext = await (from a in _context.AgencyOrders
                                         where a.CompanyId == mid
@@ -112,6 +113,10 @@ namespace pharma_sales_and_management_system.Controllers
         // GET: AgencyOrdersConfirm/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction("Login", "Manufacturers");
+            }
             if (id == null || _context.AgencyOrders == null)
             {
                 return NotFound();
@@ -133,6 +138,10 @@ namespace pharma_sales_and_management_system.Controllers
         // GET: AgencyOrdersConfirm/Create
         public IActionResult Create()
         {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction("Login", "Manufacturers");
+            }
             ViewData["AgencyId"] = new SelectList(_context.AgencyDetails, "Id", "Id");
             ViewData["CompanyId"] = new SelectList(_context.Manufacturers, "Id", "Id");
             ViewData["ProductId"] = new SelectList(_context.ProductDetails, "Id", "Id");
@@ -161,6 +170,10 @@ namespace pharma_sales_and_management_system.Controllers
         // GET: AgencyOrdersConfirm/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction("Login", "Manufacturers");
+            }
             if (id == null || _context.AgencyOrders == null)
             {
                 return NotFound();
@@ -218,6 +231,10 @@ namespace pharma_sales_and_management_system.Controllers
         // GET: AgencyOrdersConfirm/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction("Login", "Manufacturers");
+            }
             if (id == null || _context.AgencyOrders == null)
             {
                 return NotFound();

@@ -46,6 +46,9 @@ namespace pharma_sales_and_management_system.Controllers
 
                 if (agencyDetail != null)
                 {
+                    var agencyDetails = (from i in _context.AgencyDetails
+                                              select i).FirstOrDefault();
+                    ViewBag.ProfilePhoto = agencyDetails.ProfileImage;
                     //if (search != null)
                     //{
                     //    var searchResults = new List<AgencyDetail>
@@ -87,6 +90,10 @@ namespace pharma_sales_and_management_system.Controllers
         // GET: Agency/Create
         public IActionResult Create()
         {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction(nameof(Login));
+            }
             return View();
         }
 

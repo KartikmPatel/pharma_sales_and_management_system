@@ -20,16 +20,32 @@ namespace pharma_sales_and_management_system.Controllers
             _webHostEnv = webHostEnv;
         }
 
+        private bool IsUserAuthenticated()
+        {
+            return HttpContext.Session.GetInt32("AgencyId").HasValue;
+        }
+
         // GET: ProductDetails
         public async Task<IActionResult> Index()
         {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction("Login", "Agency");
+            }
             var pharma_managementContext = _context.ProductDetails.Include(p => p.Category).Include(p => p.Company);
+            var agencyDetails = await (from i in _context.AgencyDetails
+                                       select i).FirstOrDefaultAsync();
+            ViewBag.ProfilePhoto = agencyDetails.ProfileImage;
             return View(await pharma_managementContext.ToListAsync());
         }
 
         // GET: ProductDetails/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction("Login", "Agency");
+            }
             if (id == null || _context.ProductDetails == null)
             {
                 return NotFound();
@@ -39,6 +55,9 @@ namespace pharma_sales_and_management_system.Controllers
                 .Include(p => p.Category)
                 .Include(p => p.Company)
                 .FirstOrDefaultAsync(m => m.Id == id);
+            var agencyDetails = await (from i in _context.AgencyDetails
+                                       select i).FirstOrDefaultAsync();
+            ViewBag.ProfilePhoto = agencyDetails.ProfileImage;
             if (productDetail == null)
             {
                 return NotFound();
@@ -50,6 +69,13 @@ namespace pharma_sales_and_management_system.Controllers
         // GET: ProductDetails/Create
         public IActionResult Create()
         {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction("Login", "Agency");
+            }
+            var agencyDetails = (from i in _context.AgencyDetails
+                                      select i).FirstOrDefault();
+            ViewBag.ProfilePhoto = agencyDetails.ProfileImage;
             ViewBag.CategoryId = new SelectList(_context.ProductCategories, "Id", "CategoryName");
             ViewBag.CompanyId = new SelectList(_context.Manufacturers, "Id", "ComponyName");
             return View();
@@ -93,12 +119,19 @@ namespace pharma_sales_and_management_system.Controllers
         // GET: ProductDetails/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction("Login", "Agency");
+            }
             if (id == null || _context.ProductDetails == null)
             {
                 return NotFound();
             }
 
             var productDetail = await _context.ProductDetails.FindAsync(id);
+            var agencyDetails = await (from i in _context.AgencyDetails
+                                       select i).FirstOrDefaultAsync();
+            ViewBag.ProfilePhoto = agencyDetails.ProfileImage;
             if (productDetail == null)
             {
                 return NotFound();
@@ -158,6 +191,10 @@ namespace pharma_sales_and_management_system.Controllers
         // GET: ProductDetails/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction("Login", "Agency");
+            }
             if (id == null || _context.ProductDetails == null)
             {
                 return NotFound();
@@ -167,6 +204,9 @@ namespace pharma_sales_and_management_system.Controllers
                 .Include(p => p.Category)
                 .Include(p => p.Company)
                 .FirstOrDefaultAsync(m => m.Id == id);
+            var agencyDetails = await (from i in _context.AgencyDetails
+                                       select i).FirstOrDefaultAsync();
+            ViewBag.ProfilePhoto = agencyDetails.ProfileImage;
             if (productDetail == null)
             {
                 return NotFound();

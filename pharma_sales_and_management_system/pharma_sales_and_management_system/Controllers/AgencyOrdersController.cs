@@ -18,9 +18,21 @@ namespace pharma_sales_and_management_system.Controllers
             _context = context;
         }
 
+        private bool IsUserAuthenticated()
+        {
+            return HttpContext.Session.GetInt32("AgencyId").HasValue;
+        }
+
         // GET: AgencyOrders
         public async Task<IActionResult> Index()
         {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction("Login", "Agency");
+            }
+            var agencyDetails = await (from i in _context.AgencyDetails
+                                       select i).FirstOrDefaultAsync();
+            ViewBag.ProfilePhoto = agencyDetails.ProfileImage;
             var pharma_managementContext = _context.AgencyOrders.Include(a => a.Agency).Include(a => a.Company).Include(a => a.Product);
             return View(await pharma_managementContext.ToListAsync());
         }
@@ -28,6 +40,10 @@ namespace pharma_sales_and_management_system.Controllers
         // GET: AgencyOrders/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction("Login", "Agency");
+            }
             if (id == null || _context.AgencyOrders == null)
             {
                 return NotFound();
@@ -49,6 +65,13 @@ namespace pharma_sales_and_management_system.Controllers
         // GET: AgencyOrders/Create
         public IActionResult Create()
         {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction("Login", "Agency");
+            }
+            var agencyDetails = (from i in _context.AgencyDetails
+                                      select i).FirstOrDefault();
+            ViewBag.ProfilePhoto = agencyDetails.ProfileImage;
             ViewBag.ProductId = new SelectList(_context.ProductDetails, "Id", "ProductName");
             ViewBag.AgencyId = new SelectList(_context.AgencyDetails, "Id", "AgencyName");
             ViewBag.CompanyId = new SelectList(_context.Manufacturers, "Id", "ComponyName");
@@ -71,6 +94,10 @@ namespace pharma_sales_and_management_system.Controllers
         // GET: AgencyOrders/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction("Login", "Agency");
+            }
             if (id == null || _context.AgencyOrders == null)
             {
                 return NotFound();
@@ -128,6 +155,10 @@ namespace pharma_sales_and_management_system.Controllers
         // GET: AgencyOrders/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction("Login", "Agency");
+            }
             if (id == null || _context.AgencyOrders == null)
             {
                 return NotFound();

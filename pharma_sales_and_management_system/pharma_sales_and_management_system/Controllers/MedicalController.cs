@@ -20,9 +20,18 @@ namespace pharma_sales_and_management_system.Controllers
             _webHostEnv = webHostEnv;
         }
 
+        private bool IsUserAuthenticated()
+        {
+            return HttpContext.Session.GetInt32("AgencyId").HasValue;
+        }
+
         // GET: Medical
         public async Task<IActionResult> Index(string search)
         {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction("Login", "Agency");
+            }
             if (search != null)
             {
                 var searchMedical = from m in _context.MedicalShopDetails
@@ -30,6 +39,9 @@ namespace pharma_sales_and_management_system.Controllers
                                  select m;
                 return View(await searchMedical.ToListAsync());
             }
+            var agencyDetails = await (from i in _context.AgencyDetails
+                                       select i).FirstOrDefaultAsync();
+            ViewBag.ProfilePhoto = agencyDetails.ProfileImage;
             return _context.MedicalShopDetails != null ? 
                           View(await _context.MedicalShopDetails.ToListAsync()) :
                           Problem("Entity set 'pharma_managementContext.MedicalShopDetails'  is null.");
@@ -75,6 +87,10 @@ namespace pharma_sales_and_management_system.Controllers
         // GET: Medical/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction("Login", "Agency");
+            }
             if (id == null || _context.MedicalShopDetails == null)
             {
                 return NotFound();
@@ -129,6 +145,10 @@ namespace pharma_sales_and_management_system.Controllers
         // GET: Medical/Create
         public IActionResult Create()
         {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction("Login", "Agency");
+            }
             return View();
         }
 
@@ -158,6 +178,10 @@ namespace pharma_sales_and_management_system.Controllers
         // GET: Medical/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction("Login", "Agency");
+            }
             if (id == null || _context.MedicalShopDetails == null)
             {
                 return NotFound();
@@ -219,6 +243,10 @@ namespace pharma_sales_and_management_system.Controllers
         // GET: Medical/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            if (!IsUserAuthenticated())
+            {
+                return RedirectToAction("Login", "Agency");
+            }
             if (id == null || _context.MedicalShopDetails == null)
             {
                 return NotFound();
