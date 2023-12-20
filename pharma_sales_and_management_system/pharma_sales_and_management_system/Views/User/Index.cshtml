@@ -4,9 +4,9 @@
     ViewData["Title"] = "Index";
 }
 
-@{
+@* @{
     Layout = "_UserLayout";
-}
+} *@
 
 <div class="container">
 
@@ -24,7 +24,13 @@
         @TempData["OrderSuccess"]
     </div>
 }
+<input type="text" id="productName" name="product" class="form-control col-md-6 mb-2" placeholder="Search Product" />
+@* @Html.DropDownList("category",null,htmlAttributes:new { @class="form-control my-2"}) *@
 
+    @Html.DropDownList("category",
+    new SelectList(ViewBag.category, "Value", "Text"),
+    "-- Select Category --",
+    new { @class = "form-control my-2" })
 <div class="row">
     @foreach (var item in Model)
     {
@@ -54,3 +60,122 @@
 </div>
 
 </div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $(document).ready(function () {
+            $("#productName").on("input", function () {
+                const product = $(this).val();
+                // Check if the search input is not empty
+                if (product.trim() !== "") {
+                    $.ajax({
+                        url: "User/Index",
+                        method: "get",
+                        data: { product: product },
+                        success: function (data) {
+                            // Clear existing cards
+                            $(".row").empty();
+
+                            if (Array.isArray(data) && data.length > 0) {
+                                // Iterate through the received data and append new cards
+                                $.each(data, function (index, item) {
+                                    var cardHtml = `<div class="col-md-4 mb-4">
+                                                <div class="card h-100">`;
+
+                                    if (item.image) {
+                                        cardHtml += `<img src="${item.image}" class="card-img-top" alt="Product Image">`;
+                                    } else {
+                                        cardHtml += `<img src="path_to_placeholder_image" class="card-img-top" alt="Placeholder Image">`;
+                                    }
+
+                                    cardHtml += `<div class="card-body">
+                                                    <h5 class="card-title">${item.productName}</h5>
+                                                    <p class="card-text">Price: ${item.mrp}</p>
+                                                    <form asp-action="DetailProduct" asp-controller="User">
+                                                        <input type="hidden" name="mid" value="${item.id}">
+                                                        <input type="hidden" name="mrp" value="${item.mrp}">
+                                                        <input type="hidden" name="productName" value="${item.productName}">
+                                                        <button type="submit" class="btn btn-outline-primary">Show Details</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>`;
+
+                                    $(".row").append(cardHtml);
+                                });
+                            } else {
+                                // Display a message when no data is found
+                                $(".row").html("<div class='col-12 text-center'>No data found</div>");
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("Error fetching data:", error);
+                        }
+                    });
+                } else {
+                    // If the search input is empty, display all data or handle it as needed
+                    // For example, you can reload the page or reset the view.
+                    location.reload();
+                }
+            });
+
+            $("#category").on("change", function () {
+                const categoryId = $(this).val();
+                if (categoryId !== "") {
+                    $.ajax({
+                        url: "User/Index",
+                        method: "get",
+                        data: { categoryId: categoryId },
+                        success: function (data) {
+                            // Clear existing cards
+                            $(".row").empty();
+
+                            if (Array.isArray(data) && data.length > 0) {
+                                // Iterate through the received data and append new cards
+                                $.each(data, function (index, item) {
+                                    var cardHtml = `<div class="col-md-4 mb-4">
+                                            <div class="card h-100">`;
+
+                                    if (item.image) {
+                                        cardHtml += `<img src="${item.image}" class="card-img-top" alt="Product Image">`;
+                                    } else {
+                                        cardHtml += `<img src="path_to_placeholder_image" class="card-img-top" alt="Placeholder Image">`;
+                                    }
+
+                                    cardHtml += `<div class="card-body">
+                                                    <h5 class="card-title">${item.productName}</h5>
+                                                    <p class="card-text">Price: ${item.mrp}</p>
+                                                    <form asp-action="DetailProduct" asp-controller="User">
+                                                        <input type="hidden" name="mid" value="${item.id}">
+                                                        <input type="hidden" name="mrp" value="${item.mrp}">
+                                                        <input type="hidden" name="productName" value="${item.productName}">
+                                                        <button type="submit" class="btn btn-outline-primary">Show Details</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>`;
+
+                                    $(".row").append(cardHtml);
+                                });
+                            } else {
+                                // Display a message when no data is found
+                                $(".row").html("<div class='col-12 text-center'>No data found</div>");
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("Error fetching data:", error);
+                        }
+                    });
+                } else {
+                    location.reload();
+                }
+            });
+        });
+
+
+
+    </script>
+}

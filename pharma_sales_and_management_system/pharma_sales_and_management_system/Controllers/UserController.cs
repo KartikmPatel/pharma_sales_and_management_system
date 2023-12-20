@@ -61,7 +61,7 @@ namespace pharma_sales_and_management_system.Controllers
         }
 
         // GET: User
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string product,int? categoryId)
         {
             if (!IsUserAuthenticated())
             {
@@ -69,20 +69,73 @@ namespace pharma_sales_and_management_system.Controllers
             }
             else
             {
-                var data = from m in _context.MedicalSellingProducts
-                           select new MedicalSellingProductViewModel
-                           {
-                               Id = m.Id,
-                               Mrp = m.Mrp,
-                               ProductName = (from p in _context.ProductDetails
-                                              where p.Id == m.ProductId
-                                              select p.ProductName).FirstOrDefault(),
-                               Image = (from p in _context.ProductDetails
-                                        where p.Id == m.ProductId
-                                        select p.ProductImage).FirstOrDefault()
-                           };
+                if (categoryId != null)
+                {
+                    var productIds = (from p in _context.ProductDetails
+                                      where p.CategoryId == categoryId
+                                      select p.Id).ToList();
 
-                return View(data);
+                    var categoryData = from m in _context.MedicalSellingProducts
+                               where productIds.Contains(m.ProductId)
+                               select new MedicalSellingProductViewModel
+                               {
+                                   Id = m.Id,
+                                   Mrp = m.Mrp,
+                                   ProductName = (from p in _context.ProductDetails
+                                                  where p.Id == m.ProductId
+                                                  select p.ProductName).FirstOrDefault(),
+                                   Image = (from p in _context.ProductDetails
+                                            where p.Id == m.ProductId
+                                            select p.ProductImage).FirstOrDefault()
+                               };
+
+                    ViewBag.category = new SelectList(_context.ProductCategories.ToList(), "Id", "CategoryName");
+                    return Json(categoryData);
+                }
+                else
+                {
+                    if (product != null)
+                    {
+                        var productId = (from p in _context.ProductDetails
+                                         where p.ProductName.Contains(product)
+                                         select p.Id).FirstOrDefault();
+
+                        var searchData = from m in _context.MedicalSellingProducts
+                                         where m.ProductId == productId
+                                         select new MedicalSellingProductViewModel
+                                         {
+                                             Id = m.Id,
+                                             Mrp = m.Mrp,
+                                             ProductName = (from p in _context.ProductDetails
+                                                            where p.Id == m.ProductId
+                                                            select p.ProductName).FirstOrDefault(),
+                                             Image = (from p in _context.ProductDetails
+                                                      where p.Id == m.ProductId
+                                                      select p.ProductImage).FirstOrDefault()
+                                         };
+
+                        ViewBag.category = new SelectList(_context.ProductCategories.ToList(), "Id", "CategoryName");
+                        return Json(searchData);
+                    }
+                    else
+                    {
+                        var data = from m in _context.MedicalSellingProducts
+                                   select new MedicalSellingProductViewModel
+                                   {
+                                       Id = m.Id,
+                                       Mrp = m.Mrp,
+                                       ProductName = (from p in _context.ProductDetails
+                                                      where p.Id == m.ProductId
+                                                      select p.ProductName).FirstOrDefault(),
+                                       Image = (from p in _context.ProductDetails
+                                                where p.Id == m.ProductId
+                                                select p.ProductImage).FirstOrDefault()
+                                   };
+                        ViewBag.category = new SelectList(_context.ProductCategories.ToList(), "Id", "CategoryName");
+                        return View(data);
+                    }
+
+                }
             }
         }
 
