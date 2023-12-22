@@ -37,6 +37,7 @@ namespace pharma_sales_and_management_system.Controllers
                                             where i.Id == medicalShopId
                                             select i).FirstOrDefaultAsync();
                 ViewBag.ProfilePhoto = medicalDetails.ProfilePic;
+                ViewBag.editId = medicalDetails.Id;
                 var pharma_managementContext = _context.MedicalShopProductStocks.Where(m => m.MedicalShopId == medicalShopId).Include(m => m.MedicalShop).Include(m => m.Product);
                 return View(await pharma_managementContext.ToListAsync());
             }

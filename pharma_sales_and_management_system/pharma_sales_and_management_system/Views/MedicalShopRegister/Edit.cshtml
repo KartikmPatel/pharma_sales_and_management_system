@@ -4,15 +4,31 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+@{
+    Layout = "_MedicalLayout";
+}
 
-<h4>MedicalShopDetail</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit" enctype="multipart/form-data">
+<div class="container">
+    @if (ViewBag.successmessage != null)
+    {
+        <div class="alert alert-success">
+            @ViewBag.successmessage
+        </div>
+    }
+    <h4>Medicalshop owner Profile</h4>
+    <div class="card card-primary col-md-6">
+    <form asp-action="Edit" enctype="multipart/form-data">
+        <div class="card-body">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
+                <div class="form-group" style="position:relative">
+                    <img src="@Html.DisplayFor(modelItem => Model.ProfilePic)" style="border-radius: 50%;margin-left:40%" height="150px" width="150px">
+                    @* <label class="control-label" for="ProfilePic">ProfilePic</label> *@
+                    <i class="fas fa-edit" id="editIcon" style="bottom:5px;position:absolute;cursor: pointer;"></i>
+                    <input type="file" name="file" class="form-control" id="ProfilePic" style="display: none;">
+                    <input type="hidden" name="oldfile" class="form-control" id="OldProfilePic" value="@Model.ProfilePic">
+                    <span class="text-danger field-validation-valid" data-valmsg-for="ProfilePic" data-valmsg-replace="true"></span>
+                </div>
             <div class="form-group">
                 <label asp-for="OwnerName" class="control-label"></label>
                 <input asp-for="OwnerName" class="form-control" />
@@ -39,28 +55,24 @@
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label class="control-label" for="ProfilePic">ProfilePic</label>
-                <img src="@Html.DisplayFor(modelItem => Model.ProfilePic)" height="50px" width="50px">
-                <input type="file" name="file" class="form-control" id="ProfilePic">
-                <input type="hidden" name="oldfile" class="form-control" id="OldProfilePic" value="@Model.ProfilePic">
-                <span class="text-danger field-validation-valid" data-valmsg-for="ProfilePic" data-valmsg-replace="true"></span>
+                <input type="hidden" asp-for="IsConfirmed" class="form-control" />
             </div>
-            <div class="form-group">
-                <label asp-for="IsConfirmed" class="control-label"></label>
-                <input asp-for="IsConfirmed" class="form-control" />
-                <span asp-validation-for="IsConfirmed" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
+        </div>
+        <!-- /.card-body -->
 
-<div>
-    <a asp-action="Index">Back to List</a>
+        <div class="card-footer">
+            <input type="submit" value="Edit Profile" class="btn btn-primary" />
+        </div>
+    </form>
+</div>
 </div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+            // JavaScript to trigger file input click event when the edit icon is clicked
+            document.getElementById('editIcon').addEventListener('click', function () {
+                document.getElementById('ProfilePic').click();
+            });
+    </script>
 }

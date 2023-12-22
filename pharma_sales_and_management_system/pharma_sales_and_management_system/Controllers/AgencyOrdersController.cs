@@ -33,7 +33,9 @@ namespace pharma_sales_and_management_system.Controllers
             var agencyDetails = await (from i in _context.AgencyDetails
                                        select i).FirstOrDefaultAsync();
             ViewBag.ProfilePhoto = agencyDetails.ProfileImage;
+            ViewBag.editId = agencyDetails.Id;
             var pharma_managementContext = _context.AgencyOrders.Include(a => a.Agency).Include(a => a.Company).Include(a => a.Product);
+            ViewBag.Success = TempData["success"];
             return View(await pharma_managementContext.ToListAsync());
         }
 
@@ -72,6 +74,7 @@ namespace pharma_sales_and_management_system.Controllers
             var agencyDetails = (from i in _context.AgencyDetails
                                       select i).FirstOrDefault();
             ViewBag.ProfilePhoto = agencyDetails.ProfileImage;
+            ViewBag.editId = agencyDetails.Id;
             ViewBag.ProductId = new SelectList(_context.ProductDetails, "Id", "ProductName");
             ViewBag.AgencyId = new SelectList(_context.AgencyDetails, "Id", "AgencyName");
             ViewBag.CompanyId = new SelectList(_context.Manufacturers, "Id", "ComponyName");
@@ -88,6 +91,7 @@ namespace pharma_sales_and_management_system.Controllers
             agencyOrder.Date = DateTime.Now;
                 _context.Add(agencyOrder);
                 await _context.SaveChangesAsync();
+                TempData["success"] = "Order Successfully Placed";
                 return RedirectToAction(nameof(Index));
         }
 

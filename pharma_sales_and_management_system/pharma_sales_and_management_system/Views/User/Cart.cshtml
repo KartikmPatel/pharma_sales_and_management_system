@@ -42,7 +42,7 @@
 <div class="container">
 
 
-<h1>Cart</h1>
+    <h1 style="margin-left:10%;">Cart</h1>
 
 @if (TempData["CartDeleted"] != null)
 {
@@ -50,56 +50,63 @@
         @TempData["CartDeleted"]
     </div>
 }
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                Product
-            </th>
-            <th>
-                Image
-            </th>
-            <th>
-                Price
-            </th>
-            <th>
-                Quantity
-            </th>
-            <th>
-                Total Amount (Per Product)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ProductName)
-                </td>
-                <td>
-                    <img src="@Html.DisplayFor(modelItem => item.ProductImage)" height="50px" width="50px">
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Mrp)
-                </td>
-                <td>
-                    <button class="quantity-button" data-operation="decrement" data-item-id="@item.Id">-</button>
-                    <span class="quantity-display" data-item-id="@item.Id">@Html.DisplayFor(modelItem => item.Quantity)</span>
-                    <button class="quantity-button" data-operation="increment" data-item-id="@item.Id">+</button>
-                </td>
-                <td class="total-per-product" data-item-id="@item.Id">@((item.Mrp * item.Quantity).ToString("0.00"))</td>
-                <td>
-                    <form asp-action="RemoveCartItem" asp-controller="User">
-                        <input type="hidden" name="cid" value="@item.Id">
-                        <button type="submit" class="btn btn-danger"> Remove Item </button>
-                    </form>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+
+    <div class="card">
+        <!-- /.card-header -->
+        <div class="card-body">
+            <table id="example1" class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>
+                            Product
+                        </th>
+                        <th>
+                            Image
+                        </th>
+                        <th>
+                            Price
+                        </th>
+                        <th>
+                            Quantity
+                        </th>
+                        <th>
+                            Total Amount (Per Product)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ProductName)
+                            </td>
+                            <td>
+                                <img src="@Html.DisplayFor(modelItem => item.ProductImage)" height="50px" width="50px">
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Mrp)
+                            </td>
+                            <td>
+                                <button class="quantity-button" data-operation="decrement" data-item-id="@item.Id">-</button>
+                                <span class="quantity-display" data-item-id="@item.Id">@Html.DisplayFor(modelItem => item.Quantity)</span>
+                                <button class="quantity-button" data-operation="increment" data-item-id="@item.Id">+</button>
+                            </td>
+                            <td class="total-per-product" data-item-id="@item.Id">@((item.Mrp * item.Quantity).ToString("0.00"))</td>
+                            <td>
+                                <form asp-action="RemoveCartItem" asp-controller="User">
+                                    <input type="hidden" name="cid" value="@item.Id">
+                                    <button type="submit" class="btn btn-danger"> Remove Item </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <!-- /.card-body -->
+    </div>
 
 <div class="total-amount-section">
     <div class="total-amount-header">
@@ -176,6 +183,16 @@
 
             // Initial calculation of total amount
             updateTotalAmount();
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $("#example1").DataTable({
+                "responsive": true,
+                "lengthChange": false,
+                "autoWidth": false,
+                "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+            });
         });
     </script>
 }

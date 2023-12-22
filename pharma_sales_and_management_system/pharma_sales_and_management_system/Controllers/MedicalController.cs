@@ -42,6 +42,7 @@ namespace pharma_sales_and_management_system.Controllers
             var agencyDetails = await (from i in _context.AgencyDetails
                                        select i).FirstOrDefaultAsync();
             ViewBag.ProfilePhoto = agencyDetails.ProfileImage;
+            ViewBag.editId = agencyDetails.Id;
             return _context.MedicalShopDetails != null ? 
                           View(await _context.MedicalShopDetails.ToListAsync()) :
                           Problem("Entity set 'pharma_managementContext.MedicalShopDetails'  is null.");

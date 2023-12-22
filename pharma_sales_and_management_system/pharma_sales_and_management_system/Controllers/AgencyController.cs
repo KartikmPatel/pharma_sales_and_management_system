@@ -49,6 +49,7 @@ namespace pharma_sales_and_management_system.Controllers
                     var agencyDetails = (from i in _context.AgencyDetails
                                               select i).FirstOrDefault();
                     ViewBag.ProfilePhoto = agencyDetails.ProfileImage;
+                    ViewBag.editId = agencyDetails.Id;
                     //if (search != null)
                     //{
                     //    var searchResults = new List<AgencyDetail>
@@ -90,10 +91,6 @@ namespace pharma_sales_and_management_system.Controllers
         // GET: Agency/Create
         public IActionResult Create()
         {
-            if (!IsUserAuthenticated())
-            {
-                return RedirectToAction(nameof(Login));
-            }
             return View();
         }
 
@@ -141,6 +138,13 @@ namespace pharma_sales_and_management_system.Controllers
             {
                 return NotFound();
             }
+
+            var agencyId = HttpContext.Session.GetInt32("AgencyId");
+            var agencyDetails = await (from i in _context.AgencyDetails
+                                 select i).FirstOrDefaultAsync();
+            ViewBag.ProfilePhoto = agencyDetails.ProfileImage;
+            ViewBag.editId = agencyDetails.Id;
+            ViewBag.successmessage = TempData["success"];
             return View(agencyDetail);
         }
 
@@ -185,7 +189,8 @@ namespace pharma_sales_and_management_system.Controllers
                     throw;
                 }
             }
-            return RedirectToAction(nameof(Index));
+            TempData["success"] = "Profile Successfully Edited";
+            return RedirectToAction(nameof(Edit));
         }
 
         // GET: Agency/Delete/5
@@ -251,7 +256,7 @@ namespace pharma_sales_and_management_system.Controllers
                 // Store user's Id in session
                 HttpContext.Session.SetInt32("AgencyId", agency.Id);
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index","ProductCategories");
             }
             else
             {

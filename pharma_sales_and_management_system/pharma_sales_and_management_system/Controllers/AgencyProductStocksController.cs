@@ -33,6 +33,7 @@ namespace pharma_sales_and_management_system.Controllers
             var agencyDetails = await (from i in _context.AgencyDetails
                                        select i).FirstOrDefaultAsync();
             ViewBag.ProfilePhoto = agencyDetails.ProfileImage;
+            ViewBag.editId = agencyDetails.Id;
             var pharma_managementContext = _context.AgencyProductStocks.Include(p => p.Product);
             return View(await pharma_managementContext.ToListAsync());                
         }

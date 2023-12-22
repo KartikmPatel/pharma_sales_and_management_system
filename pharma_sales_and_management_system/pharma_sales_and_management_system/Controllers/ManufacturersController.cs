@@ -121,6 +121,11 @@ namespace pharma_sales_and_management_system.Controllers
             {
                 return NotFound();
             }
+            var manufacturerId = HttpContext.Session.GetInt32("ManufacturerId");
+
+            var manufacturerDetail = await _context.Manufacturers.FirstOrDefaultAsync(m => m.Id == manufacturerId.Value);
+            ViewBag.editId = manufacturerDetail.Id;
+            ViewBag.successmessage = TempData["success"];
             return View(manufacturer);
         }
 
@@ -154,7 +159,8 @@ namespace pharma_sales_and_management_system.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                TempData["success"] = "Profile Successfully Edited";
+                return RedirectToAction(nameof(Edit));
             }
             return View(manufacturer);
         }
@@ -222,7 +228,7 @@ namespace pharma_sales_and_management_system.Controllers
                 // Store user's Id in session
                 HttpContext.Session.SetInt32("ManufacturerId", manu.Id);
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index","AgencyOrdersConfirm");
             }
             else
             {

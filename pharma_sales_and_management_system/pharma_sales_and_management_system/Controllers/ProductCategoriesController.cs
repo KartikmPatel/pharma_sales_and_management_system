@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -41,7 +42,9 @@ namespace pharma_sales_and_management_system.Controllers
             var agencyDetails = await (from i in _context.AgencyDetails
                                         select i).FirstOrDefaultAsync();
             ViewBag.ProfilePhoto = agencyDetails.ProfileImage;
+            ViewBag.editId = agencyDetails.Id;
 
+            ViewBag.Success = TempData["success"];
             return _context.ProductCategories != null ? 
                           View(await _context.ProductCategories.ToListAsync()) :
                           Problem("Entity set 'pharma_managementContext.ProductCategories'  is null.");
@@ -64,6 +67,7 @@ namespace pharma_sales_and_management_system.Controllers
             var agencyDetails = await (from i in _context.AgencyDetails
                                        select i).FirstOrDefaultAsync();
             ViewBag.ProfilePhoto = agencyDetails.ProfileImage;
+            ViewBag.editId = agencyDetails.Id;
             if (productCategory == null)
             {
                 return NotFound();
@@ -98,6 +102,7 @@ namespace pharma_sales_and_management_system.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            TempData["success"] = "Category Successfully Added";
             return View(productCategory);
         }
 
@@ -117,6 +122,7 @@ namespace pharma_sales_and_management_system.Controllers
             var agencyDetails = await (from i in _context.AgencyDetails
                                        select i).FirstOrDefaultAsync();
             ViewBag.ProfilePhoto = agencyDetails.ProfileImage;
+            ViewBag.editId = agencyDetails.Id;
             if (productCategory == null)
             {
                 return NotFound();
@@ -154,6 +160,7 @@ namespace pharma_sales_and_management_system.Controllers
                         throw;
                     }
                 }
+                TempData["success"] = "Category Successfully Edited";
                 return RedirectToAction(nameof(Index));
             }
             return View(productCategory);
@@ -176,6 +183,7 @@ namespace pharma_sales_and_management_system.Controllers
             var agencyDetails = await (from i in _context.AgencyDetails
                                        select i).FirstOrDefaultAsync();
             ViewBag.ProfilePhoto = agencyDetails.ProfileImage;
+            ViewBag.editId = agencyDetails.Id;
             if (productCategory == null)
             {
                 return NotFound();
@@ -200,6 +208,7 @@ namespace pharma_sales_and_management_system.Controllers
             }
             
             await _context.SaveChangesAsync();
+            TempData["success"] = "Category Successfully Deleted";
             return RedirectToAction(nameof(Index));
         }
 

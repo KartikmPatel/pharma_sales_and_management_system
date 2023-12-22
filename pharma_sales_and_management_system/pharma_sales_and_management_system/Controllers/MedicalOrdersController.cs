@@ -37,9 +37,12 @@ namespace pharma_sales_and_management_system.Controllers
                                             where i.Id == medicalShopId
                                             select i).FirstOrDefaultAsync();
                 ViewBag.ProfilePhoto = medicalDetails.ProfilePic;
+                ViewBag.editId = medicalDetails.Id;
                 var pharma_managementContext = await (from o in _context.MedicalOrders
                                                       where o.MedicalShopId == medicalShopId
                                                       select o).Include(m => m.Company).Include(m => m.MedicalShop).Include(m => m.Product).ToListAsync();
+
+                ViewBag.Success = TempData["success"];
                 return View(pharma_managementContext);
             }
         }
@@ -179,7 +182,7 @@ namespace pharma_sales_and_management_system.Controllers
                                   where i.Id == medicalShopId
                                   select i).FirstOrDefault();
             ViewBag.ProfilePhoto = medicalDetails.ProfilePic;
-
+            ViewBag.editId = medicalDetails.Id;
             var medicalOrder = await _context.MedicalOrders
                 .Include(m => m.Company)
                 .Include(m => m.MedicalShop)
@@ -209,6 +212,7 @@ namespace pharma_sales_and_management_system.Controllers
             }
 
             await _context.SaveChangesAsync();
+            TempData["success"] = "Medicine Successfully Deleted";
             return RedirectToAction(nameof(Index));
         }
 

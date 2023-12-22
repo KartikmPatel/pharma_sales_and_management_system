@@ -1,0 +1,63 @@
+﻿@model IEnumerable<pharma_sales_and_management_system.Models.Feedback>
+
+@{
+    ViewData["Title"] = "UserFeedback";
+}
+
+@{
+    Layout = "_MedicalLayout";
+}
+
+<div class="container">
+    <h1>UserFeedback</h1>
+<div class="card">
+    <!-- /.card-header -->
+    <div class="card-body">
+        <table id="example1" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                        <th>
+                            @* @Html.DisplayNameFor(model => model.User.Name) *@
+                            User Name
+                        </th>
+                        <th>
+                            @* @Html.DisplayNameFor(model => model.Description) *@
+                            Review
+                        </th>
+                        @* <th>
+                        @Html.DisplayNameFor(model => model.MedicalShop)
+                        </th> *@
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                            @* <td>
+                        @Html.DisplayFor(modelItem => item.MedicalShop.Id)
+                        </td> *@
+                            <td>
+                                @Html.DisplayFor(modelItem => item.User.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Description)
+                            </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <!-- /.card-body -->
+</div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#example1").DataTable({
+            "responsive": true,
+            "lengthChange": false,
+            "autoWidth": false,
+            "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+        });
+    });
+</script>

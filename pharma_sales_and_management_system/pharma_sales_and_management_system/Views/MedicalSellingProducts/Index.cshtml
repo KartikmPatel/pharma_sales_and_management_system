@@ -9,6 +9,18 @@
 }
 
 <div class="container">
+    @if (ViewBag.success != null)
+    {
+        <div class="alert alert-success">
+            @ViewBag.success
+        </div>
+    }
+    @if (ViewBag.success1 != null)
+    {
+        <div class="alert alert-success">
+            @ViewBag.success1
+        </div>
+    }
     <h1 style="margin-left:10%;">Medical Selling Products</h1>
     <p>
         <a asp-action="Create" class="btn btn-success">Add New</a>

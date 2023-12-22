@@ -40,6 +40,7 @@ namespace pharma_sales_and_management_system.Controllers
                                             where i.Id == medicalShopId
                                             select i).FirstOrDefaultAsync();
                 ViewBag.ProfilePhoto = medicalDetails.ProfilePic;
+                ViewBag.editId = medicalDetails.Id;
                 var Confirmed = await (from c in _context.MedicalShopDetails
                                        where c.IsConfirmed == 1 && c.Id == medicalShopId
                                        select c.IsConfirmed).FirstOrDefaultAsync();
@@ -245,6 +246,7 @@ namespace pharma_sales_and_management_system.Controllers
                                            where i.Id == medicalShopId
                                            select i).FirstOrDefault();
                 ViewBag.ProfilePhoto = medicalDetails.ProfilePic;
+                ViewBag.editId = medicalDetails.Id;
                 var companyName = (from c in _context.Manufacturers
                                   where c.Id == companyId
                                   select c.ComponyName).FirstOrDefault();

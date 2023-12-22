@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -46,6 +47,7 @@ namespace pharma_sales_and_management_system.Controllers
                 if (medicalShopDetail != null)
                 {
                     ViewBag.ProfilePhoto = medicalShopDetail.ProfilePic;
+                    ViewBag.editId = medicalShopDetail.Id;
                     if (search != null)
                     {
                         var searchResults = new List<MedicalShopDetail>
@@ -59,6 +61,27 @@ namespace pharma_sales_and_management_system.Controllers
                 }
                 return Problem("Entity set 'pharma_managementContext.MedicalShopDetails' is null.");
             }
+        }
+
+        public IActionResult UserFeedback()
+        {
+            var medicalShopId = HttpContext.Session.GetInt32("MedicalShopId");
+            if (!medicalShopId.HasValue)
+            {
+                return RedirectToAction(nameof(Login));
+            }
+            var medicalShopDetail1 = (from m in _context.MedicalShopDetails
+                                      where m.Id == medicalShopId
+                                      select m).FirstOrDefault();
+            ViewBag.ProfilePhoto = medicalShopDetail1.ProfilePic;
+            ViewBag.editId = medicalShopDetail1.Id;
+
+            //var feedbackdata = (from f in _context.Feedbacks
+            //                   where f.MedicalShopId == medicalShopId
+            //                   select f).ToList();
+            var feedbackdata = _context.Feedbacks.Where(f => f.MedicalShopId == medicalShopId).Include(f => f.MedicalShop).Include(f => f.User);
+            return View(feedbackdata);
+
         }
 
         // GET: MedicalShopRegister/Details/5
@@ -87,10 +110,6 @@ namespace pharma_sales_and_management_system.Controllers
         // GET: MedicalShopRegister/Create
         public IActionResult Create()
         {
-            if (!IsUserAuthenticated())
-            {
-                return RedirectToAction(nameof(Login));
-            }
             return View();
         }
 
@@ -135,7 +154,13 @@ namespace pharma_sales_and_management_system.Controllers
             {
                 return NotFound();
             }
-            return View(medicalShopDetail);
+
+            var medicalShopId = HttpContext.Session.GetInt32("MedicalShopId");
+            var medicalShopDetail1 = await _context.MedicalShopDetails.FirstOrDefaultAsync(m => m.Id == medicalShopId.Value);
+                ViewBag.ProfilePhoto = medicalShopDetail1.ProfilePic;
+                ViewBag.editId = medicalShopDetail1.Id;
+            ViewBag.successmessage = TempData["success"];
+                return View(medicalShopDetail);
         }
 
         // POST: MedicalShopRegister/Edit/5
@@ -180,7 +205,8 @@ namespace pharma_sales_and_management_system.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));  
+                TempData["success"] = "Profile Successfully Edited";
+                return RedirectToAction(nameof(Edit));
         }
 
         // GET: MedicalShopRegister/Delete/5
@@ -246,7 +272,7 @@ namespace pharma_sales_and_management_system.Controllers
                 // Store user's Id in session
                 HttpContext.Session.SetInt32("MedicalShopId", medicalShop.Id);
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index","MedicalMedicine");
             }
             else
             {

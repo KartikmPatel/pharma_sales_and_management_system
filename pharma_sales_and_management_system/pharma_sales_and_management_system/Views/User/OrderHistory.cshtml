@@ -10,65 +10,87 @@
 
 <div class="container">
 
-
 <h1>OrderHistory</h1>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @*@Html.DisplayNameFor(model => model.Quantity)*@
-            </th>
-            <th>
-                @*@Html.DisplayNameFor(model => model.TotalAmount)*@
-            </th>
-            <th>
-                @*@Html.DisplayNameFor(model => model.OrderDate)*@
-            </th>
-            <th>
-                @*@Html.DisplayNameFor(model => model.IsDelivered)*@
-            </th>
-            <th>
-                @*@Html.DisplayNameFor(model => model.OrderAddress)*@
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @*@Html.DisplayFor(modelItem => item.Image)*@
-                    <img src="@Html.DisplayFor(modelItem => item.Image)" height="50px" width="50px">
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.productName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.totalAmount)
-            </td>
-            <td>
-                Quantity :- @Html.DisplayFor(modelItem => item.Quantity)
-            </td>
-            <td>
-                    @if (item.is_delivered == 1)
+    <div class="card">
+        <!-- /.card-header -->
+        <div class="card-body">
+            <table id="example1" class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>
+                            @*@Html.DisplayNameFor(model => model.Quantity)*@
+                            Image
+                        </th>
+                        <th>
+                            @*@Html.DisplayNameFor(model => model.TotalAmount)*@
+                            Product Name
+                        </th>
+                        <th>
+                            @*@Html.DisplayNameFor(model => model.OrderDate)*@
+                            TotalAmount
+                        </th>
+                        <th>
+                            @*@Html.DisplayNameFor(model => model.IsDelivered)*@
+                            Quantity
+                        </th>
+                        <th>
+                            @*@Html.DisplayNameFor(model => model.OrderAddress)*@
+                            Status
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
                     {
-                        <p style="color:green;font-weight:bold">Delivered</p>
+                        <tr>
+                            <td>
+                                @*@Html.DisplayFor(modelItem => item.Image)*@
+                                <img src="@Html.DisplayFor(modelItem => item.Image)" height="50px" width="50px">
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.productName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.totalAmount)
+                            </td>
+                            <td>
+                                Quantity :- @Html.DisplayFor(modelItem => item.Quantity)
+                            </td>
+                            <td>
+                                @if (item.is_delivered == 1)
+                                {
+                                    <p style="color:green;font-weight:bold">Delivered</p>
+                                }
+                                else
+                                {
+                                    <p style="color:red;font-weight:bold">Pending</p>
+                                }
+                            </td>
+                            <td>
+                                <form asp-action="OrderDetail" asp-controller="User" method="post">
+                                    <input type="hidden" name="oId" value="@item.Id">
+                                    <button type="submit" class="btn btn-outline-secondary">Show Details</button>
+                                </form>
+                            </td>
+                        </tr>
                     }
-                    else
-                    {
-                        <p style="color:red;font-weight:bold">Pending</p>
-                    }
-            </td>
-            <td>
-              <form asp-action="OrderDetail" asp-controller="User" method="post">
-                  <input type="hidden" name="oId" value="@item.Id">
-                  <button type="submit" class="btn btn-outline-secondary">Show Details</button>
-              </form>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+                </tbody>
+            </table>
+        </div>
+        <!-- /.card-body -->
+    </div>
 
 </div>
+
+<script>
+    $(document).ready(function () {
+        $("#example1").DataTable({
+            "responsive": true,
+            "lengthChange": false,
+            "autoWidth": false,
+            "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+        });
+    });
+</script>

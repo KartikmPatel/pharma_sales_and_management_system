@@ -63,6 +63,7 @@ namespace pharma_sales_and_management_system.Controllers
         // GET: User
         public async Task<IActionResult> Index(string product,int? categoryId)
         {
+            var UserId = HttpContext.Session.GetInt32("UserId");
             if (!IsUserAuthenticated())
             {
                 return RedirectToAction(nameof(Login));
@@ -132,6 +133,11 @@ namespace pharma_sales_and_management_system.Controllers
                                                 select p.ProductImage).FirstOrDefault()
                                    };
                         ViewBag.category = new SelectList(_context.ProductCategories.ToList(), "Id", "CategoryName");
+                        var uDetails = await (from u in _context.UserDetails
+                                              where u.Id == UserId
+                                              select u).FirstOrDefaultAsync();
+                        ViewBag.ProfilePhoto = uDetails.ProfilePic;
+                        ViewBag.editId = uDetails.Id;
                         return View(data);
                     }
 
@@ -141,6 +147,7 @@ namespace pharma_sales_and_management_system.Controllers
 
         public IActionResult DetailProduct(int mid,int mrp,string productName)
         {
+            var UserId = HttpContext.Session.GetInt32("UserId");
             if (!IsUserAuthenticated())
             {
                 return RedirectToAction(nameof(Login));
@@ -153,7 +160,12 @@ namespace pharma_sales_and_management_system.Controllers
                 var companyData = _context.Manufacturers.FirstOrDefault(x => x.Id == productData.CompanyId);
                 var categoryData = _context.ProductCategories.FirstOrDefault(x => x.Id == productData.CategoryId);
 
-            return View((productData.Id,productData.ProductName,productData.Description,medicalSellingData.Mrp,productData.Disease,companyData.ComponyName,productData.ProductImage,productData.ExpDate,categoryData.CategoryName,medicalData.Id));
+                var uDetails = (from u in _context.UserDetails
+                                     where u.Id == UserId
+                                     select u).FirstOrDefault();
+                ViewBag.ProfilePhoto = uDetails.ProfilePic;
+                ViewBag.editId = uDetails.Id;
+                return View((productData.Id,productData.ProductName,productData.Description,medicalSellingData.Mrp,productData.Disease,companyData.ComponyName,productData.ProductImage,productData.ExpDate,categoryData.CategoryName,medicalData.Id));
             }
         }
 
@@ -186,7 +198,11 @@ namespace pharma_sales_and_management_system.Controllers
                 }
 
                 _context.SaveChanges();
-
+                var uDetails = (from u in _context.UserDetails
+                                where u.Id == userId
+                                select u).FirstOrDefault();
+                ViewBag.ProfilePhoto = uDetails.ProfilePic;
+                ViewBag.editId = uDetails.Id;
                 TempData["CartAdded"] = "Product Successfully Add in Cart";
                 return RedirectToAction(nameof(Index));
             }
@@ -225,6 +241,11 @@ namespace pharma_sales_and_management_system.Controllers
                     })
                     .ToList();
 
+                var uDetails = (from u in _context.UserDetails
+                                where u.Id == userId
+                                select u).FirstOrDefault();
+                ViewBag.ProfilePhoto = uDetails.ProfilePic;
+                ViewBag.editId = uDetails.Id;
                 return View(data);
             }
         }
@@ -275,6 +296,12 @@ namespace pharma_sales_and_management_system.Controllers
                 _context.UserCarts.Remove(cartItem);
                 _context.SaveChanges();
 
+                var userId = HttpContext.Session.GetInt32("UserId");
+                var uDetails = (from u in _context.UserDetails
+                                where u.Id == userId
+                                select u).FirstOrDefault();
+                ViewBag.ProfilePhoto = uDetails.ProfilePic;
+                ViewBag.editId = uDetails.Id;
                 TempData["CartDeleted"] = "Product Successfully Removed";
                 return RedirectToAction(nameof(Cart));
             }
@@ -349,12 +376,19 @@ namespace pharma_sales_and_management_system.Controllers
                         is_delivered = o.IsDelivered
                     })
                     .ToList();
+
+                var uDetails = (from u in _context.UserDetails
+                                where u.Id == userId
+                                select u).FirstOrDefault();
+                ViewBag.ProfilePhoto = uDetails.ProfilePic;
+                ViewBag.editId = uDetails.Id;
                 return View(data);
             }
         }
 
         public IActionResult OrderDetail(int oId)
         {
+            var userId = HttpContext.Session.GetInt32("UserId");
             if (!IsUserAuthenticated())
             {
                 return RedirectToAction(nameof(Login));
@@ -365,11 +399,17 @@ namespace pharma_sales_and_management_system.Controllers
                 var productData = _context.ProductDetails.FirstOrDefault(x => x.Id == orderData.ProductId);
                 var medicalSellingData = _context.MedicalSellingProducts.FirstOrDefault(x => x.MedicalShopId == orderData.MedicalShopId && x.ProductId == orderData.ProductId);
                 var categoryData = _context.ProductCategories.FirstOrDefault(x => x.Id == productData.CategoryId);
+                var uDetails = (from u in _context.UserDetails
+                                where u.Id == userId
+                                select u).FirstOrDefault();
+                ViewBag.ProfilePhoto = uDetails.ProfilePic;
+                ViewBag.editId = uDetails.Id;
                 return View((orderData.Id,orderData.Quantity,orderData.TotalAmount,orderData.IsDelivered,orderData.OrderAddress,productData.Id,productData.ProductName,categoryData.CategoryName,productData.ProductImage,medicalSellingData.Mrp));
             }
         }
         public async Task<IActionResult> Details(int? id)
         {
+            var userId = HttpContext.Session.GetInt32("UserId");
             if (!IsUserAuthenticated())
             {
                 return RedirectToAction(nameof(Login));
@@ -387,6 +427,11 @@ namespace pharma_sales_and_management_system.Controllers
                 return NotFound();
             }
 
+            var uDetails = (from u in _context.UserDetails
+                            where u.Id == userId
+                            select u).FirstOrDefault();
+            ViewBag.ProfilePhoto = uDetails.ProfilePic;
+            ViewBag.editId = uDetails.Id;
             return View(userDetail);
         }
 
@@ -440,6 +485,14 @@ namespace pharma_sales_and_management_system.Controllers
             {
                 return NotFound();
             }
+
+            var userId = HttpContext.Session.GetInt32("UserId");
+            var uDetails = (from u in _context.UserDetails
+                            where u.Id == userId
+                            select u).FirstOrDefault();
+            ViewBag.ProfilePhoto = uDetails.ProfilePic;
+            ViewBag.editId = uDetails.Id;
+            ViewBag.successmessage = TempData["success"];
             return View(userDetail);
         }
 
@@ -492,7 +545,8 @@ namespace pharma_sales_and_management_system.Controllers
                     throw;
                 }
             }
-            return RedirectToAction(nameof(Index));
+            TempData["success"] = "Profile Successfully Edited";
+            return RedirectToAction(nameof(Edit));
         }
 
         // GET: User/Delete/5
@@ -515,6 +569,12 @@ namespace pharma_sales_and_management_system.Controllers
                 return NotFound();
             }
 
+            var userId = HttpContext.Session.GetInt32("UserId");
+            var uDetails = (from u in _context.UserDetails
+                            where u.Id == userId
+                            select u).FirstOrDefault();
+            ViewBag.ProfilePhoto = uDetails.ProfilePic;
+            ViewBag.editId = uDetails.Id;
             return View(userDetail);
         }
 

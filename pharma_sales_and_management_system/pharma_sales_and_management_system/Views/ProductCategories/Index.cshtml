@@ -10,6 +10,12 @@
 
 
 <div class="container">
+    @if (ViewBag.success != null)
+    {
+        <div class="alert alert-success">
+            @ViewBag.success
+        </div>
+    }
     <h1 style="margin-left:10%;">Categories</h1>
 <p>
     <a asp-action="Create" class="btn btn-info">Create New</a>

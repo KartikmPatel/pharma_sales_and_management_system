@@ -4,12 +4,219 @@
     ViewData["Title"] = "Index";
 }
 
-@* @{
+@{
     Layout = "_UserLayout";
-} *@
+}
 
+<head>
+    <style>
+        body {
+            font-family: 'Muli', sans-serif;
+            background: #ddd;
+        }
+
+        .shell {
+            padding: 80px 0;
+        }
+
+        .wsk-cp-product {
+            background: #fff;
+            padding: 15px;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            position: relative;
+            margin: 20px auto;
+        }
+
+        .wsk-cp-img {
+            position: absolute;
+            top: 5px;
+            left: 50%;
+            transform: translate(-50%);
+            -webkit-transform: translate(-50%);
+            -ms-transform: translate(-50%);
+            -moz-transform: translate(-50%);
+            -o-transform: translate(-50%);
+            -khtml-transform: translate(-50%);
+            width: 100%;
+            padding: 15px;
+            transition: all 0.2s ease-in-out;
+        }
+
+            .wsk-cp-img img {
+                width: 100%;
+                transition: all 0.2s ease-in-out;
+                border-radius: 6px;
+            }
+
+        .wsk-cp-product:hover .wsk-cp-img {
+            top: -40px;
+        }
+
+            .wsk-cp-product:hover .wsk-cp-img img {
+                box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
+            }
+
+        .wsk-cp-text {
+            padding-top: 110%;
+        }
+
+            .wsk-cp-text .category {
+                text-align: center;
+                font-size: 12px;
+                font-weight: bold;
+                padding: 5px;
+                margin-bottom: 45px;
+                position: relative;
+                transition: all 0.2s ease-in-out;
+            }
+
+                .wsk-cp-text .category > * {
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%,-50%);
+                    -webkit-transform: translate(-50%,-50%);
+                    -moz-transform: translate(-50%,-50%);
+                    -ms-transform: translate(-50%,-50%);
+                    -o-transform: translate(-50%,-50%);
+                    -khtml-transform: translate(-50%,-50%);
+                }
+
+                .wsk-cp-text .category > span {
+                    padding: 12px 30px;
+                    border: 1px solid #313131;
+                    background: #212121;
+                    color: #fff;
+                    box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
+                    border-radius: 27px;
+                    transition: all 0.05s ease-in-out;
+                }
+
+        .wsk-cp-product:hover .wsk-cp-text .category > span {
+            border-color: #ddd;
+            box-shadow: none;
+            padding: 11px 28px;
+        }
+
+        .wsk-cp-product:hover .wsk-cp-text .category {
+            margin-top: 0px;
+        }
+
+        .wsk-cp-text .title-product {
+            text-align: center;
+        }
+
+            .wsk-cp-text .title-product h3 {
+                font-size: 20px;
+                font-weight: bold;
+                margin: 15px auto;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                width: 100%;
+            }
+
+        .card-footer {
+            padding: 15px 0 15px;
+            border-top: 1px solid #ddd;
+            height:50px;
+        }
+
+            .card-footer:after, .card-footer:before {
+                content: '';
+                display: table;
+            }
+
+            .card-footer:after {
+                clear: both;
+            }
+
+            .card-footer .wcf-left {
+                float: left;
+            }
+
+            .card-footer .wcf-right {
+                float: right;
+                margin-bottom: 15px;
+            }
+
+        .price {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        a.buy-btn {
+            display: block;
+            color: #212121;
+            text-align: center;
+            font-size: 18px;
+            width: 35px;
+            height: 35px;
+            line-height: 35px;
+            border-radius: 50%;
+            border: 1px solid #212121;
+            transition: all 0.2s ease-in-out;
+        }
+
+            a.buy-btn:hover, a.buy-btn:active, a.buy-btn:focus {
+                border-color: #FF9800;
+                background: #FF9800;
+                color: #fff;
+                text-decoration: none;
+            }
+
+        .wsk-btn {
+            display: inline-block;
+            color: #212121;
+            text-align: center;
+            font-size: 18px;
+            transition: all 0.2s ease-in-out;
+            border-color: #FF9800;
+            background: #FF9800;
+            padding: 12px 30px;
+            border-radius: 27px;
+            margin: 0 5px;
+        }
+
+            .wsk-btn:hover, .wsk-btn:focus, .wsk-btn:active {
+                text-decoration: none;
+                color: #fff;
+            }
+
+        .red {
+            color: #F44336;
+            font-size: 22px;
+            display: inline-block;
+            margin: 0 5px;
+        }
+
+        .wsk-cp-product .wsk-cp-img img {
+            box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
+        }
+
+        .wsk-cp-product .wsk-cp-text .category > span {
+            border-color: #ddd;
+            box-shadow: none;
+            padding: 11px 28px;
+        }
+
+        .wsk-cp-product .wsk-cp-text .category {
+            margin-top: 0px;
+        }
+
+        a.buy-btn {
+            border-color: #FF9800;
+            background: #FF9800;
+            color: #fff;
+        }
+
+        }
+    </style>
+</head>
+
+<div class="shell">
 <div class="container">
-
 
 @if (TempData["CartAdded"] != null)
 {
@@ -34,7 +241,7 @@
 <div class="row">
     @foreach (var item in Model)
     {
-        <div class="col-md-4 mb-4">
+        @* <div class="col-md-4 mb-4">
             <div class="card h-100">
                 @if (!string.IsNullOrEmpty(item.Image))
                 {
@@ -55,10 +262,47 @@
                     </form>
                 </div>
             </div>
+        </div> *@
+
+           @*  <div class="shell">
+  <div class="container">
+    <div class="row"> *@
+      <div class="col-md-3">
+        <div class="wsk-cp-product">
+          <div class="wsk-cp-img">
+                                    @if (!string.IsNullOrEmpty(item.Image))
+                                    {
+                                        <img src="@item.Image" class="img-responsive" alt="Product Image">
+                                    }
+                                    else
+                                    {
+                                        <img src="path_to_placeholder_image" class="img-responsive" alt="Placeholder Image">
+                                    }
         </div>
+          <div class="wsk-cp-text">
+            <div class="title-product">
+                                        <h3>@item.ProductName</h3>
+            </div>
+            <div class="card-footer">
+                                <div class="wcf-left"><span class="price"><i class="fas fa-rupee-sign"></i>@item.Mrp</span></div>
+              <div class="wcf-right">
+                  <form asp-action="DetailProduct" asp-controller="User">
+                        <input type="hidden" name="mid" value="@item.Id">
+                        <input type="hidden" name="mrp" value="@item.Mrp">
+                        <input type="hidden" name="productName" value="@item.ProductName">
+                                        <button type="submit" class="btn btn-outline-warning"><i class="fas fa-eye"></i></button>
+                    </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+     @*  </div>
+     </div>
+     </div> *@
     }
 </div>
-
+</div>
 </div>
 
 @section Scripts {
@@ -82,24 +326,31 @@
                             if (Array.isArray(data) && data.length > 0) {
                                 // Iterate through the received data and append new cards
                                 $.each(data, function (index, item) {
-                                    var cardHtml = `<div class="col-md-4 mb-4">
-                                                <div class="card h-100">`;
+                                    var cardHtml = `<div class="col-md-3">
+                                                    <div class="wsk-cp-product">`;
 
                                     if (item.image) {
-                                        cardHtml += `<img src="${item.image}" class="card-img-top" alt="Product Image">`;
+                                        cardHtml += `<div class="wsk-cp-img"><img src="${item.image}" class="card-img-top" alt="Product Image"></div>`;
                                     } else {
-                                        cardHtml += `<img src="path_to_placeholder_image" class="card-img-top" alt="Placeholder Image">`;
+                                        cardHtml += `<div class="wsk-cp-img"><img src="path_to_placeholder_image" class="card-img-top" alt="Placeholder Image"></div>`;
                                     }
 
-                                    cardHtml += `<div class="card-body">
-                                                    <h5 class="card-title">${item.productName}</h5>
-                                                    <p class="card-text">Price: ${item.mrp}</p>
-                                                    <form asp-action="DetailProduct" asp-controller="User">
-                                                        <input type="hidden" name="mid" value="${item.id}">
-                                                        <input type="hidden" name="mrp" value="${item.mrp}">
-                                                        <input type="hidden" name="productName" value="${item.productName}">
-                                                        <button type="submit" class="btn btn-outline-primary">Show Details</button>
-                                                    </form>
+                                    cardHtml += `<div class="wsk-cp-text">
+                                                             <div class="title-product">
+                                                            <h3>${item.productName}</h3>
+                                                            </div>
+
+                                                            <div class="card-footer">
+                                                                    <div class="wcf-left"><span class="price"><i class="fas fa-rupee-sign"></i>${item.mrp}</span></div>
+                                                            <div class="wcf-right">
+                                                            <form action="/User/DetailProduct" method="post">
+                                                                <input type="hidden" name="mid" value="${item.id}">
+                                                                <input type="hidden" name="mrp" value="${item.mrp}">
+                                                                <input type="hidden" name="productName" value="${item.productName}">
+                                                            <button type="submit" class="btn btn-outline-warning"><i class="fas fa-eye"></i></button>
+                                                            </form>
+                                                            </div>
+                                                            </div>
                                                 </div>
                                             </div>
                                         </div>`;
@@ -136,27 +387,34 @@
                             if (Array.isArray(data) && data.length > 0) {
                                 // Iterate through the received data and append new cards
                                 $.each(data, function (index, item) {
-                                    var cardHtml = `<div class="col-md-4 mb-4">
-                                            <div class="card h-100">`;
+                                    var cardHtml = `<div class="col-md-3">
+                                                            <div class="wsk-cp-product">`;
 
                                     if (item.image) {
-                                        cardHtml += `<img src="${item.image}" class="card-img-top" alt="Product Image">`;
+                                        cardHtml += `<div class="wsk-cp-img"><img src="${item.image}" class="card-img-top" alt="Product Image"></div>`;
                                     } else {
-                                        cardHtml += `<img src="path_to_placeholder_image" class="card-img-top" alt="Placeholder Image">`;
+                                        cardHtml += `<div class="wsk-cp-img"><img src="path_to_placeholder_image" class="card-img-top" alt="Placeholder Image"></div>`;
                                     }
 
-                                    cardHtml += `<div class="card-body">
-                                                    <h5 class="card-title">${item.productName}</h5>
-                                                    <p class="card-text">Price: ${item.mrp}</p>
-                                                    <form asp-action="DetailProduct" asp-controller="User">
-                                                        <input type="hidden" name="mid" value="${item.id}">
-                                                        <input type="hidden" name="mrp" value="${item.mrp}">
-                                                        <input type="hidden" name="productName" value="${item.productName}">
-                                                        <button type="submit" class="btn btn-outline-primary">Show Details</button>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>`;
+                                    cardHtml += `<div class="wsk-cp-text">
+                                                                     <div class="title-product">
+                                                                    <h3>${item.productName}</h3>
+                                                                    </div>
+
+                                                                    <div class="card-footer">
+                                                                            <div class="wcf-left"><span class="price"><i class="fas fa-rupee-sign"></i>${item.mrp}</span></div>
+                                                                    <div class="wcf-right">
+                                                                    <form action="/User/DetailProduct" method="post">
+                                                                        <input type="hidden" name="mid" value="${item.id}">
+                                                                        <input type="hidden" name="mrp" value="${item.mrp}">
+                                                                        <input type="hidden" name="productName" value="${item.productName}">
+                                                                    <button type="submit" class="btn btn-outline-warning"><i class="fas fa-eye"></i></button>
+                                                                    </form>
+                                                                    </div>
+                                                                    </div>
+                                                        </div>
+                                                    </div>
+                                                </div>`;
 
                                     $(".row").append(cardHtml);
                                 });

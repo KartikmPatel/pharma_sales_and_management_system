@@ -39,7 +39,10 @@ namespace pharma_sales_and_management_system.Controllers
                                             where i.Id == medicalShopId
                                             select i).FirstOrDefaultAsync();
                 ViewBag.ProfilePhoto = medicalDetails.ProfilePic;
+                ViewBag.editId = medicalDetails.Id;
                 var pharma_managementContext = _context.MedicalSellingProducts.Where(m => m.MedicalShopId == medicalShopId).Include(m => m.MedicalShop).Include(m => m.Product);
+                ViewBag.Success = TempData["success"];
+                ViewBag.Success1 = TempData["success1"];
                 return View(await pharma_managementContext.ToListAsync());
             }
         }
@@ -82,7 +85,7 @@ namespace pharma_sales_and_management_system.Controllers
                                            where i.Id == medicalShopId
                                            select i).FirstOrDefault();
                 ViewBag.ProfilePhoto = medicalDetails.ProfilePic;
-
+                ViewBag.editId = medicalDetails.Id;
                 var prodIDs = (from p in _context.MedicalShopProductStocks
                                where p.MedicalShopId == medicalShopId
                                select p.ProductId).ToList();
@@ -96,7 +99,6 @@ namespace pharma_sales_and_management_system.Controllers
 
                 // Assign the list of SelectListItem to ViewBag.ProductName
                 ViewBag.ProductName = selectListItems;
-
                 return View();
             }
         }
@@ -149,6 +151,7 @@ namespace pharma_sales_and_management_system.Controllers
                 {
                     _context.Add(medicalSellingProduct);
                     await _context.SaveChangesAsync();
+                    TempData["success"] = "Medicine Successfully Added";
                     return RedirectToAction(nameof(Index));
                 }
             return Problem("Entity set 'pharma_managementContext.MedicalSellingProduct'  is null.");
@@ -230,6 +233,7 @@ namespace pharma_sales_and_management_system.Controllers
                                   where i.Id == medicalShopId
                                   select i).FirstOrDefault();
             ViewBag.ProfilePhoto = medicalDetails.ProfilePic;
+            ViewBag.editId = medicalDetails.Id;
             var medicalSellingProduct = await _context.MedicalSellingProducts
                 .Include(m => m.MedicalShop)
                 .Include(m => m.Product)
@@ -258,6 +262,7 @@ namespace pharma_sales_and_management_system.Controllers
             }
             
             await _context.SaveChangesAsync();
+            TempData["success1"] = "Medicine Successfully Deleted";
             return RedirectToAction(nameof(Index));
         }
 

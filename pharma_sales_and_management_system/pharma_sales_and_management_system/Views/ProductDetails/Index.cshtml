@@ -10,6 +10,12 @@
 
 
 <div class="container">
+    @if (ViewBag.success != null)
+    {
+        <div class="alert alert-success">
+            @ViewBag.success
+        </div>
+    }
     <h1 style="margin-left:10%;">Products Details</h1>
     <p>
         <a asp-action="Create" class="btn btn-info">Create New</a>
@@ -84,7 +90,7 @@
                                 @Html.DisplayFor(modelItem => item.Company.ComponyName)
                             </td>
                             <td>
-                                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                                @* <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> *@ |
                                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                             </td>

@@ -4,7 +4,7 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+@* <h1>Create</h1>
 
 <h4>UserDetail</h4>
 <hr />
@@ -45,7 +45,6 @@
             <div class="form-group">
                 <label asp-for="ProfilePic" class="control-label"></label>
                 <input type="file" name="file" asp-for="ProfilePic" class="form-control" />
-                @*<input asp-for="ProfilePic" class="form-control" />*@
                 <span asp-validation-for="ProfilePic" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -57,8 +56,166 @@
 
 <div>
     <a asp-action="Index">Back to List</a>
-</div>
+</div> *@
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+@{
+    Layout = "_Login";
 }
+
+<html>
+<head>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100%;
+        }
+
+        html {
+            background: linear-gradient(to right bottom, #fbdb89, #f48982);
+            background-repeat: no-repeat;
+            background-size: cover;
+            width: 100%;
+            height: 100%;
+            background-attachment: fixed;
+        }
+
+        body {
+            font-family: sans-serif;
+            line-height: 1.4;
+            display: flex;
+        }
+
+        .container {
+            max-width: 500px; /* Set a maximum width for the container */
+            width: 100%; /* Take up 100% of the available width */
+            margin: 0 auto; /* Center the container horizontally */
+            padding: 36px 48px 48px 48px;
+            background-color: #f2efee;
+            border-radius: 11px;
+            box-shadow: 0 2.4rem 4.8rem rgba(0, 0, 0, 0.15);
+            position: absolute;
+            top: 50%; /* Center the container vertically */
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .login-title {
+            /* padding: 15px; */
+            font-size: 22px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .login-form {
+            display: grid;
+            grid-template-columns: 1fr;
+            row-gap: 10px;
+        }
+
+            .login-form label {
+                display: block;
+                margin-bottom: 4px;
+            }
+
+            .login-form input {
+                width: 100%;
+                padding: 0.7rem;
+                border-radius: 9px;
+                border: none;
+            }
+
+                .login-form input:focus {
+                    outline: none;
+                    box-shadow: 0 0 0 4px rgba(253, 242, 233, 0.5);
+                }
+
+        .btn--form {
+            background-color: #f48982;
+            color: #fdf2e9;
+            align-self: end;
+            padding: 6px;
+        }
+
+        .btn,
+        .btn:link,
+        .btn:visited {
+            display: inline-block;
+            text-decoration: none;
+            font-size: 20px;
+            font-weight: 600;
+            border-radius: 9px;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+
+        button {
+            outline: 1px solid #f48982;
+        }
+
+        .btn--form:hover {
+            background-color: #fdf2e9;
+            color: #f48982;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="login-title">Register</h2>
+
+        <form class="login-form mb-2" asp-action="Create" enctype="multipart/form-data">
+            <div>
+                <label for="">User Name </label>
+                <input asp-for="Name" class="form-control" placeholder="User Name" required />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div>
+                <label for="">Email </label>
+                <input asp-for="Email" class="form-control" placeholder="Email Address" required />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div>
+                <label for="">Password </label>
+                <input asp-for="Password" type="password" class="form-control" placeholder="Password" required />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div>
+                <label for="">City </label>
+                <input asp-for="City" class="form-control" placeholder="City" required />
+                <span asp-validation-for="City" class="text-danger"></span>
+            </div>
+            <div>
+                <label for="">Contact Number </label>
+                <input asp-for="ContactNo" class="form-control" placeholder="Contact Number" required />
+                <span asp-validation-for="ContactNo" class="text-danger"></span>
+            </div>
+            <div>
+                <label for="">Pincode </label>
+                <input asp-for="Pincode" class="form-control" placeholder="Pincode" required/>
+                <span asp-validation-for="Pincode" class="text-danger"></span>
+            </div>
+            <div>
+                <label for="">Profile Picture </label>
+                <input type="file" name="file" asp-for="ProfilePic" class="form-control" required />
+                <span asp-validation-for="ProfilePic" class="text-danger"></span>
+            </div>
+            <button class="btn btn--form" style="margin-top:7px;" type="submit" value="Register">
+                Register
+            </button>
+        </form>
+    </div>
+</body>
+</html>
+
+@* @section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+} *@

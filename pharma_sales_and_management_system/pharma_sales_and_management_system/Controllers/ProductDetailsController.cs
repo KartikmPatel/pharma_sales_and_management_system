@@ -36,6 +36,8 @@ namespace pharma_sales_and_management_system.Controllers
             var agencyDetails = await (from i in _context.AgencyDetails
                                        select i).FirstOrDefaultAsync();
             ViewBag.ProfilePhoto = agencyDetails.ProfileImage;
+            ViewBag.editId = agencyDetails.Id;
+            ViewBag.Success = TempData["success"];
             return View(await pharma_managementContext.ToListAsync());
         }
 
@@ -58,6 +60,7 @@ namespace pharma_sales_and_management_system.Controllers
             var agencyDetails = await (from i in _context.AgencyDetails
                                        select i).FirstOrDefaultAsync();
             ViewBag.ProfilePhoto = agencyDetails.ProfileImage;
+            ViewBag.editId = agencyDetails.Id;
             if (productDetail == null)
             {
                 return NotFound();
@@ -76,6 +79,7 @@ namespace pharma_sales_and_management_system.Controllers
             var agencyDetails = (from i in _context.AgencyDetails
                                       select i).FirstOrDefault();
             ViewBag.ProfilePhoto = agencyDetails.ProfileImage;
+            ViewBag.editId = agencyDetails.Id;
             ViewBag.CategoryId = new SelectList(_context.ProductCategories, "Id", "CategoryName");
             ViewBag.CompanyId = new SelectList(_context.Manufacturers, "Id", "ComponyName");
             return View();
@@ -111,6 +115,7 @@ namespace pharma_sales_and_management_system.Controllers
             await _context.SaveChangesAsync();
             }
 
+            TempData["success"] = "Product Successfully Added";
             return RedirectToAction(nameof(Index));
             
             //return View(productDetail);
@@ -132,6 +137,7 @@ namespace pharma_sales_and_management_system.Controllers
             var agencyDetails = await (from i in _context.AgencyDetails
                                        select i).FirstOrDefaultAsync();
             ViewBag.ProfilePhoto = agencyDetails.ProfileImage;
+            ViewBag.editId = agencyDetails.Id;
             if (productDetail == null)
             {
                 return NotFound();
@@ -184,7 +190,8 @@ namespace pharma_sales_and_management_system.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+            TempData["success"] = "Product Successfully Edited";
+            return RedirectToAction(nameof(Index));
         }
 
 
@@ -207,6 +214,7 @@ namespace pharma_sales_and_management_system.Controllers
             var agencyDetails = await (from i in _context.AgencyDetails
                                        select i).FirstOrDefaultAsync();
             ViewBag.ProfilePhoto = agencyDetails.ProfileImage;
+            ViewBag.editId = agencyDetails.Id;
             if (productDetail == null)
             {
                 return NotFound();
@@ -240,6 +248,7 @@ namespace pharma_sales_and_management_system.Controllers
             }
 
             await _context.SaveChangesAsync();
+            TempData["success"] = "Product Successfully Deleted";
             return RedirectToAction(nameof(Index));
         }
 

@@ -40,12 +40,14 @@
                 <dd class="col-sm-8">@Html.DisplayFor(model => model.Company)</dd>
             </dl>
 
+            <div class="row">
             <form asp-action="addCart" asp-controller="User">
                 <input type="hidden" name="mid" value="@Model.mid">
                 <input type="hidden" name="pid" value="@Model.pid">
                 <button type="submit" class="btn btn-primary">Add To Cart</button>
             </form>
-            <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+            <a asp-action="Index" class="btn btn-secondary ml-2">Back to List</a>
+            </div>
         </div>
     </div>
 </div>

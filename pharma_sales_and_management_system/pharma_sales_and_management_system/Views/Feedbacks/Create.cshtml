@@ -1,0 +1,49 @@
+﻿@model pharma_sales_and_management_system.Models.Feedback
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+@{
+    Layout = "_UserLayout";
+}
+
+<div class="container col-md-6">
+    @if (ViewBag.successmessage != null)
+    {
+        <div class="alert alert-success">
+            @ViewBag.successmessage
+        </div>
+    }
+<h4>Feedback</h4>
+<hr />
+<div class="card card-primary">
+    <form asp-action="Create">
+        <div class="card-body">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="MedicalShopId" class="control-label">Owner Name</label>
+                    <select asp-for="MedicalShopId" class="form-control" asp-items="ViewBag.OwnerName"></select>
+                </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <textarea asp-for="Description" class="form-control"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                    <input type="hidden" name="username" class="form-control" value="@ViewBag.UserName"/>
+            </div>
+        </div>
+        <!-- /.card-body -->
+
+        <div class="card-footer">
+            <input type="submit" value="Send" class="btn btn-primary" />
+        </div>
+    </form>
+</div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
