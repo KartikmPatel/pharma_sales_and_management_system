@@ -6,5 +6,6 @@
         public decimal Mrp { get; set; }
         public string ProductName { get; set; }
         public string Image { get; set; }
+        public string IsExpired { get; set; }
     }
 }

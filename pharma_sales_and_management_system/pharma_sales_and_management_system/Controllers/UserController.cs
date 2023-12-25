@@ -77,18 +77,22 @@ namespace pharma_sales_and_management_system.Controllers
                                       select p.Id).ToList();
 
                     var categoryData = from m in _context.MedicalSellingProducts
-                               where productIds.Contains(m.ProductId)
-                               select new MedicalSellingProductViewModel
-                               {
-                                   Id = m.Id,
-                                   Mrp = m.Mrp,
-                                   ProductName = (from p in _context.ProductDetails
-                                                  where p.Id == m.ProductId
-                                                  select p.ProductName).FirstOrDefault(),
-                                   Image = (from p in _context.ProductDetails
-                                            where p.Id == m.ProductId
-                                            select p.ProductImage).FirstOrDefault()
-                               };
+                                       where productIds.Contains(m.ProductId) && (from p in _context.ProductDetails
+                                                                                  where p.Id == m.ProductId
+                                                                                        && p.ExpDate >= DateTime.Today
+                                                                                  select p.ProductName).Any()
+                                       select new MedicalSellingProductViewModel
+                                       {
+                                           Id = m.Id,
+                                           Mrp = m.Mrp,
+                                           ProductName = (from p in _context.ProductDetails
+                                                          where p.Id == m.ProductId
+                                                                && p.ExpDate >= DateTime.Today
+                                                          select p.ProductName).FirstOrDefault(),
+                                           Image = (from p in _context.ProductDetails
+                                                    where p.Id == m.ProductId
+                                                    select p.ProductImage).FirstOrDefault()
+                                       };
 
                     ViewBag.category = new SelectList(_context.ProductCategories.ToList(), "Id", "CategoryName");
                     return Json(categoryData);
@@ -97,18 +101,23 @@ namespace pharma_sales_and_management_system.Controllers
                 {
                     if (product != null)
                     {
-                        var productId = (from p in _context.ProductDetails
+                        var ProductId = (from p in _context.ProductDetails
                                          where p.ProductName.Contains(product)
                                          select p.Id).FirstOrDefault();
 
                         var searchData = from m in _context.MedicalSellingProducts
-                                         where m.ProductId == productId
+                                         where m.ProductId == ProductId
+                                               && (from p in _context.ProductDetails
+                                                   where p.Id == m.ProductId
+                                                         && p.ExpDate >= DateTime.Today
+                                                   select p.ProductName).Any()
                                          select new MedicalSellingProductViewModel
                                          {
                                              Id = m.Id,
                                              Mrp = m.Mrp,
                                              ProductName = (from p in _context.ProductDetails
                                                             where p.Id == m.ProductId
+                                                                  && p.ExpDate >= DateTime.Today
                                                             select p.ProductName).FirstOrDefault(),
                                              Image = (from p in _context.ProductDetails
                                                       where p.Id == m.ProductId
@@ -121,17 +130,23 @@ namespace pharma_sales_and_management_system.Controllers
                     else
                     {
                         var data = from m in _context.MedicalSellingProducts
+                                   where (from p in _context.ProductDetails
+                                          where p.Id == m.ProductId
+                                                && p.ExpDate >= DateTime.Today
+                                          select p.ProductName).Any()
                                    select new MedicalSellingProductViewModel
                                    {
                                        Id = m.Id,
                                        Mrp = m.Mrp,
                                        ProductName = (from p in _context.ProductDetails
                                                       where p.Id == m.ProductId
+                                                            && p.ExpDate >= DateTime.Today
                                                       select p.ProductName).FirstOrDefault(),
                                        Image = (from p in _context.ProductDetails
                                                 where p.Id == m.ProductId
                                                 select p.ProductImage).FirstOrDefault()
                                    };
+
                         ViewBag.category = new SelectList(_context.ProductCategories.ToList(), "Id", "CategoryName");
                         var uDetails = await (from u in _context.UserDetails
                                               where u.Id == UserId
@@ -140,7 +155,6 @@ namespace pharma_sales_and_management_system.Controllers
                         ViewBag.editId = uDetails.Id;
                         return View(data);
                     }
-
                 }
             }
         }
