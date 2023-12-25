@@ -68,14 +68,14 @@
                 margin-bottom: 8px;
             }
 
-            .login-form input {
+            .login-form .i1 {
                 width: 100%;
                 padding: 1.2rem;
                 border-radius: 9px;
                 border: none;
             }
 
-                .login-form input:focus {
+                .login-form .i1:focus {
                     outline: none;
                     box-shadow: 0 0 0 4px rgba(253, 242, 233, 0.5);
                 }
@@ -125,17 +125,17 @@
         <form class="login-form mb-2" asp-action="Login">
             <div>
                 <label for="email">Email </label>
-                <input asp-for="Email" type="email" id="emailaddress" class="form-control" placeholder="Email address" required />
+                <input asp-for="Email" type="email" id="emailaddress" class="i1" placeholder="Email address" required />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
 
             <div>
                 <label for="password">Password </label>
-                <input asp-for="Password" type="password" id="password" placeholder="password" class="form-control" required />
+                <input asp-for="Password" type="password" id="password" placeholder="password" class="i1" required />
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
-            <input type="checkbox" id="checkbox-signin" value="lsRememberMe"> <label for="rememberMe">Remember me</label>
-            <button class="btn btn--form" style="margin-top:20px;" type="submit" onclick="lsRememberMe()" value="Log in">
+            <label><input type="checkbox" id="checkbox-signin" value="lsRememberMe" /> &nbsp;Remember me</label>
+            <button class="btn btn--form" style="margin-top:12px;" type="submit" onclick="lsRememberMe()" value="Log in">
                 Log in
             </button>
         </form>
